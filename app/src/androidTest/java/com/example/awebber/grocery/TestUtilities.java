@@ -29,7 +29,7 @@ import java.util.Set;
  *
  */
 public class TestUtilities extends AndroidTestCase {
-    static final String TEST_LOCATION = "99705";
+
     static final String TEST_BRAND ="NIKE";
     static final String TEST_BASICS_DES ="SNEAKER";
     static final long TEST_DATE = 1419033600L;  // December 20th, 2014
@@ -54,7 +54,7 @@ public class TestUtilities extends AndroidTestCase {
     }
 
     /*
-        Students: Use this to create some default weather values for your database tests.
+        Students: Use this to create some default grocery values for your database tests.
      */
     static ContentValues createGroceryValues(long BasicDescRowId,long brandRowId) {
         ContentValues GroceryValues = new ContentValues();
@@ -65,10 +65,7 @@ public class TestUtilities extends AndroidTestCase {
         return GroceryValues;
     }
 
-    /*
-        Students: You can uncomment this helper function once you have finished creating the
-        LocationEntry part of the WeatherContract.
-     */
+
     static ContentValues createNikeBrandValues() {
         // Create a new map of values, where column names are the keys
         ContentValues testValues = new ContentValues();
@@ -83,12 +80,7 @@ public class TestUtilities extends AndroidTestCase {
     }
 
 
-
-    /*
-        Students: You can uncomment this function once you have finished creating the
-        LocationEntry part of the WeatherContract as well as the WeatherDbHelper.
-     */
-   static long insertNikeBrandValues(Context context) {
+      static long insertNikeBrandValues(Context context) {
        // insert our test records into the database
        GroceryDbHelper dbHelper = new GroceryDbHelper(context);
        SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -99,7 +91,7 @@ public class TestUtilities extends AndroidTestCase {
 
 
        // Verify we got a row back.
-       assertTrue("Error: Failure to insert North Pole Location Values", BrandRowId != -1);
+       assertTrue("Error: Failure to insert Nike Brand Values", BrandRowId != -1);
 
 
        return  BrandRowId;
@@ -115,7 +107,7 @@ public class TestUtilities extends AndroidTestCase {
 
         // Verify we got a row back.
 
-        assertTrue("Error: Failure to insert North Pole Location Values", BasicDescRowId != -1);
+        assertTrue("Error: Failure to insert Sneaker BasicDesc Values", BasicDescRowId != -1);
 
         return BasicDescRowId;
     }
