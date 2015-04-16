@@ -1,6 +1,7 @@
 package com.example.awebber.grocery;
 
 
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 
 import android.support.v4.app.Fragment;
@@ -19,12 +20,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.example.awebber.grocery.data.GroceryContract;
+import com.example.awebber.grocery.data.GroceryContract.GroceryEntry;
 
 public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+            //todo DELETE THIS TEST
+        Uri j =   GroceryContract.GroceryEntry.buildGroceriesBasicDescWBrand("Hello", "Wordl");
+
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
