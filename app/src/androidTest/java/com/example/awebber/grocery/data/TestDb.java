@@ -130,7 +130,7 @@ public class TestDb extends AndroidTestCase {
         // Build a HashSet of all of the column names we want to look for
         final HashSet<String> BasicDescriptionEntryColumnHashSet = new HashSet<String>();
         BasicDescriptionEntryColumnHashSet.add(GroceryContract.BasicDescriptionEntry._ID);
-        BasicDescriptionEntryColumnHashSet.add(GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_DESC);
+        BasicDescriptionEntryColumnHashSet.add(GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE);
         int columnBasicDescriptionNameIndex = c.getColumnIndex("name");
         do {
             String columnName = c.getString(columnBasicDescriptionNameIndex);

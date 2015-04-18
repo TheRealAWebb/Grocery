@@ -1,11 +1,14 @@
 package com.example.awebber.grocery.data;
 
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Build;
 import android.test.AndroidTestCase;
 import com.example.awebber.grocery.data.GroceryContract.GroceryEntry;
 import com.example.awebber.grocery.data.GroceryContract.BrandEntry;
@@ -73,7 +76,7 @@ public class TestProvider extends AndroidTestCase {
     }
 
     /*
-       This helper function deletes all records from both database tables using the database
+       This helper function deletes all records from All database tables using the database
        functions only.  This is designed to be used to reset the state of the database until the
        delete functionality is available in the ContentProvider.
      */
@@ -181,25 +184,23 @@ public class TestProvider extends AndroidTestCase {
         read out the data.  Uncomment this test to see if the basic weather query functionality
         given in the ContentProvider is working correctly.
      */
-    public void testBasicWeatherQuery() {
-        // insert our test records into the database
-        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+    public void testBasicDescQuery() {
+         ContentValues testValues = TestUtilities.createSneakerBasicDescValues();
+        // Register a content observer for our insert.  This time, directly with the content resolver
+        TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
+        mContext.getContentResolver().registerContentObserver(BasicDescriptionEntry.CONTENT_URI, true, tco);
+        Uri locationUri = mContext.getContentResolver().insert(BasicDescriptionEntry.CONTENT_URI, testValues);
+        tco.waitForNotificationOrFail();
+        mContext.getContentResolver().unregisterContentObserver(tco);
 
-        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
+        long basicDescRowId = ContentUris.parseId(locationUri);
+        assertTrue("Unable to Insert BasicDescriptionEntry into the Database "  , basicDescRowId != -1);
 
-        // Fantastic.  Now that we have a location, add some weather!
-        ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
-
-        long weatherRowId = db.insert(WeatherEntry.TABLE_NAME, null, weatherValues);
-        assertTrue("Unable to Insert WeatherEntry into the Database", weatherRowId != -1);
-
-        db.close();
+     //   db.close();
 
         // Test the basic content provider query
-        Cursor weatherCursor = mContext.getContentResolver().query(
-                WeatherEntry.CONTENT_URI,
+        Cursor basicDescCursor = mContext.getContentResolver().query(
+                BasicDescriptionEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -207,25 +208,32 @@ public class TestProvider extends AndroidTestCase {
         );
 
         // Make sure we get the correct cursor out of the database
-        TestUtilities.validateCursor("testBasicWeatherQuery", weatherCursor, weatherValues);
-    }
+        TestUtilities.validateCursor("testBasicDescQuery", basicDescCursor, testValues);
 
+        // Has the NotificationUri been set correctly? --- we can only test this easily against API
+        // level 19 or greater because getNotificationUri was added in API level 19.
+        if (Build.VERSION.SDK_INT >= 19) {
+            assertEquals("Error: Basic Description Query did not properly set NotificationUri",
+                    basicDescCursor.getNotificationUri(), BasicDescriptionEntry.CONTENT_URI);
+        }
+    }
   /*
       This test uses the database directly to insert and then uses the ContentProvider to
       read out the data.  Uncomment this test to see if your location queries are
       performing correctly.
    */
-    public void testBasicLocationQueries() {
+
+    public void testBasicBrandQueries() {
         // insert our test records into the database
-        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
+       GroceryDbHelper dbHelper = new GroceryDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        ContentValues testValues = TestUtilities.createNorthPoleLocationValues();
-        long locationRowId = TestUtilities.insertNorthPoleLocationValues(mContext);
-
+        ContentValues testValues = TestUtilities.createNikeBrandValues();
+        long BrandRowId = TestUtilities.insertNikeBrandValues(mContext);
+        assertTrue("Unable to Insert BrandEntry into the Database", BrandRowId != -1);
         // Test the basic content provider query
-        Cursor locationCursor = mContext.getContentResolver().query(
-                LocationEntry.CONTENT_URI,
+        Cursor brandCursor = mContext.getContentResolver().query(
+                BrandEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -233,13 +241,13 @@ public class TestProvider extends AndroidTestCase {
         );
 
         // Make sure we get the correct cursor out of the database
-        TestUtilities.validateCursor("testBasicLocationQueries, location query", locationCursor, testValues);
+        TestUtilities.validateCursor("testBasicBrandQueries, brand query", brandCursor, testValues);
 
         // Has the NotificationUri been set correctly? --- we can only test this easily against API
         // level 19 or greater because getNotificationUri was added in API level 19.
         if ( Build.VERSION.SDK_INT >= 19 ) {
-            assertEquals("Error: Location Query did not properly set NotificationUri",
-                    locationCursor.getNotificationUri(), LocationEntry.CONTENT_URI);
+            assertEquals("Error: Brand Query did not properly set NotificationUri",
+                    brandCursor.getNotificationUri(), BrandEntry.CONTENT_URI);
         }
     }
 

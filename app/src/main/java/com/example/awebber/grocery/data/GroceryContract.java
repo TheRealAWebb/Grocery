@@ -30,18 +30,18 @@ public  class GroceryContract  {
     public static final String CONTENT_AUTHORITY = "com.example.awebber.grocery";
 
     // Use CONTENT_AUTHORITY to create the base of all URI's which apps will use to contact
-    // the content provider.
+    // the content provider. content:// is the scheme that says we are accessing a content provider
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     // Possible paths (appended to base content URI for possible URI's)
-    // For instance, content://com.example.android.sunshine.app/weather/ is a valid path for
-    // looking at weather data.
-    public static final String PATH_GROCERIES = "groceries";
-    public static final String PATH_BRANDS = "brands";
-    public static final String PATH_BASIC_DESC ="basic_descriptions";
+    // For instance, content://com.example.awebber.grocery/groceries/ is a valid path for
+    // looking at groceries data.
+    public static final String PATH_GROCERIES = GroceryEntry.TABLE_NAME;// "groceries";
+    public static final String PATH_BRANDS = BrandEntry.TABLE_NAME;// "brands";
+    public static final String PATH_BASIC_DESC = BasicDescriptionEntry.TABLE_NAME;//"basic_descriptions";
 
 
-    //    Inner class that defines the table contents of the groceries table
+    // Inner class that defines the table contents of the groceries table
     public static final class GroceryEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
@@ -62,21 +62,24 @@ public  class GroceryContract  {
 
         // The name of the product Coconut oil,Pure Sport,Procell
         public static final String  COLUMN_NAME = "product_name";
+        //Build a uri with an id number @ the end used for queries with id
 
+        //For queries use buildGroceriesBasicDescWBran
         public static Uri buildGroceriesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-
+        //For queries use buildGroceriesBasicDescWBran
         public static Uri buildGroceriesBrand(String brandName) {
-                        return CONTENT_URI.buildUpon().appendPath(brandName).build();
+                        return CONTENT_URI.buildUpon().appendPath(PATH_BRANDS).appendPath(brandName).build();
                    }
-
+        //For queries use buildGroceriesBasicDescWBrand
         public static Uri buildGroceriesBasicDesc(String productDescription) {
-            return CONTENT_URI.buildUpon().appendPath(productDescription).build();
+            return CONTENT_URI.buildUpon().appendPath(PATH_BASIC_DESC).appendPath(productDescription).build();
         }
-
+        //
         public static Uri buildGroceriesBasicDescWBrand(String productDescription,String brandName) {
-          Log.e("TEST",CONTENT_URI.buildUpon().appendPath(productDescription).appendPath(brandName).build().toString());
+         //TODO Delete this test print out
+          Log.e("TEST", CONTENT_URI.buildUpon().appendPath(productDescription).appendPath(brandName).appendQueryParameter("This", "That").build().toString());
 
             return CONTENT_URI.
                     buildUpon().
@@ -85,6 +88,13 @@ public  class GroceryContract  {
                     build();
         }
 
+        public static String getBrandNameFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+      }
+
+        public static long getBasicDesc(Uri uri) {
+            return Long.parseLong(uri.getPathSegments().get(2));
+        }
     }
 
     //    Inner class that defines the table contents of the brands table
@@ -110,10 +120,7 @@ public  class GroceryContract  {
 
     //   Inner class that defines the table contents of the basic_descriptions table
     public static final class BasicDescriptionEntry implements BaseColumns {
-        public static Uri buildWeatherLocation(String locationSetting) {
-                       return CONTENT_URI.buildUpon().appendPath(locationSetting).build();
-                   }
-        public static final Uri CONTENT_URI =
+           public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_BASIC_DESC).build();
 
         public static final String CONTENT_TYPE =
@@ -123,9 +130,9 @@ public  class GroceryContract  {
 
         public static final String TABLE_NAME = "basic_descriptions";
 
-        //A basic description of what the items is e.g cookie ,cereal ,Fruit
+        //A basic description of what the items is e.g cookie ,cereal ,Fruit ,tortilla chip
         //name should be in singular form
-        public static final String COLUMN_PRODUCT_DESC = "product_description";
+        public static final String COLUMN_PRODUCT_TYPE = "product_type";
 
         public static Uri buildBasicDescriptionsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

@@ -76,7 +76,7 @@ public class TestUtilities extends AndroidTestCase {
     static ContentValues createSneakerBasicDescValues() {
         // Create a new map of values, where column names are the keys
         ContentValues testValues = new ContentValues();
-        testValues.put(GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_DESC, TEST_BASICS_DES );
+        testValues.put(GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE, TEST_BASICS_DES );
         return testValues;
     }
 
@@ -108,7 +108,7 @@ public class TestUtilities extends AndroidTestCase {
 
         // Verify we got a row back.
 
-        assertTrue("Error: Failure to insert Sneaker BasicDesc Values", BasicDescRowId != -1);
+        assertTrue("Error: Failure to insert Sneaker BasicDesc Values into Table" + GroceryContract.BasicDescriptionEntry.TABLE_NAME , BasicDescRowId != -1);
 
         return BasicDescRowId;
     }

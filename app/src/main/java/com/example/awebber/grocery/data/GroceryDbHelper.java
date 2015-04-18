@@ -22,7 +22,8 @@ import com.example.awebber.grocery.data.GroceryContract.GroceryEntry;
 public class GroceryDbHelper extends SQLiteOpenHelper{
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    //Incermented to 2 because of row name change
+    private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "grocery.db";
 
@@ -43,8 +44,8 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         final String SQL_CREATE_Basic_Description_TABLE ="CREATE TABLE "+
                 BasicDescriptionEntry.TABLE_NAME + " (" +
                 BasicDescriptionEntry._ID + " INTEGER PRIMARY KEY," +
-                BasicDescriptionEntry.COLUMN_PRODUCT_DESC + " TEXT NOT NULL, " +
-               " UNIQUE (" +  BasicDescriptionEntry.COLUMN_PRODUCT_DESC +
+                BasicDescriptionEntry.COLUMN_PRODUCT_TYPE + " TEXT NOT NULL, " +
+               " UNIQUE (" +  BasicDescriptionEntry.COLUMN_PRODUCT_TYPE +
                                 ") ON CONFLICT REPLACE);";
 
         final String SQL_CREATE_GROCERIES_TABLE = "CREATE TABLE " +
@@ -88,7 +89,5 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + BasicDescriptionEntry.TABLE_NAME);
             onCreate(sqLiteDatabase);
         }
-
-
 
 }
