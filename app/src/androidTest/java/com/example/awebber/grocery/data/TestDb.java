@@ -21,7 +21,7 @@ import android.test.AndroidTestCase;
 import java.util.HashSet;
 
 
-public class TestDb extends AndroidTestCase {
+public class  TestDb extends AndroidTestCase {
 
     public static final String LOG_TAG = TestDb.class.getSimpleName();
 

@@ -27,21 +27,16 @@ public class GroceryContentProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    //
     static final int GROCERIES = 100;
     static final int GROCERIES_WITH_BRANDS = 102;
     static final int GROCERIES_WITH_BASIC_DESCRIPTIONS =103;
     static final int GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS =105;
 
     static final int BRANDS = 200;
-    //static final int BRANDS_WITH_GROCERIES = 201;
 
     static final int BASIC_DESCRIPTIONS = 300;
-   // static final int BASIC_DESCRIPTIONS_WITH_GROCERIES = 301;
 
     private GroceryDbHelper mOpenHelper;
-
-
 
 
     //This defines the "From" statemeny of the Query
@@ -68,8 +63,6 @@ public class GroceryContentProvider extends ContentProvider {
     }
     //Buildings the select statements that set up the condition
     // Where condtion1 (< ?,= ?,<= ?,> ?,>= ? ,= ?)  selectionArgs[]
-
-
     //Where Brands.brand_name = ?
     private static final String sBrandSelection =
             GroceryContract.BrandEntry.TABLE_NAME +
@@ -107,11 +100,43 @@ public class GroceryContentProvider extends ContentProvider {
 
     public GroceryContentProvider() {
     }
+    @Override
+    public boolean onCreate() {
+        //  Implement this to initialize your content provider on startup.
+        mOpenHelper = new GroceryDbHelper(getContext());
+        return true;
+    }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        int rowsDeleted;
+        //To remove all rows and get a count pass "1" as the whereClause.
+       //if no selection is passed assumed to mean delete all rows
+        if(null == selection){
+            rowsDeleted = 1;
+        }
+        switch (match) {
+            case GROCERIES: {     //(table  ,whereClause , whereArgs )
+                rowsDeleted = db.delete(GroceryContract.GroceryEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            case BRANDS: {
+                rowsDeleted = db.delete(GroceryContract.BrandEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            case BASIC_DESCRIPTIONS: {
+                rowsDeleted = db.delete(GroceryContract.BasicDescriptionEntry.TABLE_NAME,selection,selectionArgs);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+       if(rowsDeleted != 0){
+        getContext().getContentResolver().notifyChange(uri, null);
+       }
+        return rowsDeleted;
     }
 
     @Override
@@ -190,24 +215,12 @@ public class GroceryContentProvider extends ContentProvider {
         return returnUri;
         }
 
-    @Override
-    public boolean onCreate() {
-        //  Implement this to initialize your content provider on startup.
-       mOpenHelper = new GroceryDbHelper(getContext());
-        return true;
-    }
-    // Queries the user dictionary and returns results
-   // mCursor = getContentResolver().query(
-   //         UserDictionary.Words.CONTENT_URI,   // The content URI of the words table
-   //         mProjection,                        // The columns to return for each row
-   //         mSelectionClause                    // Selection criteria
-   //                 mSelectionArgs,                     // Selection criteria
-   //         mSortOrder);                        // The sort order for the returned rows
+
+
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        // Here's the switch statement that, given a URI, will determine what kind of request it is,
+                // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
@@ -254,6 +267,8 @@ public class GroceryContentProvider extends ContentProvider {
                 );
                 break;
             }
+   //TODO implement query groceries/brands/*
+
    /*         //"groceries/brands/*"
             case  GROCERIES_WITH_BRANDS:
             {
@@ -268,7 +283,7 @@ public class GroceryContentProvider extends ContentProvider {
                 break;
             }
 
-
+ //TODO implement   query groceries/basic_descriptions/Brands/*
             // "groceries/basic_descriptions/Brands/*"
             case GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS:
             {
@@ -276,7 +291,7 @@ public class GroceryContentProvider extends ContentProvider {
                 break;
             }
 */
-
+            //TODO implement  query
  /*   case GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS:
             {
                 retCursor =mOpenHelper.getReadableDatabase().query(
@@ -301,11 +316,42 @@ public class GroceryContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection,
-                      String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+    public int update(Uri uri, ContentValues values, String selection,String[] selectionArgs) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+          int rowsUpdated;
+
+        switch (match) {
+            case GROCERIES: {      //  (table        values    whereClause   whereArgs)
+                rowsUpdated = db.update(GroceryContract.GroceryEntry.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            }
+            case BRANDS: {
+                rowsUpdated = db.update(GroceryContract.BrandEntry.TABLE_NAME, values, selection,selectionArgs);
+                break;
+            }
+            case BASIC_DESCRIPTIONS: {
+                rowsUpdated = db.update(GroceryContract.BasicDescriptionEntry.TABLE_NAME, values, selection,selectionArgs);
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+                 if(rowsUpdated != 0){
+            getContext().getContentResolver().notifyChange(uri,null);
+             }
+        return rowsUpdated;
     }
+//TODO Implement Bulkinsert
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values){
+      /* final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match =sUriMatcher..match(uri);
+        switch match;
+        */
+        return  0;
+    }
+
     static UriMatcher buildUriMatcher() {
         // All paths added to the UriMatcher have a corresponding code to return when a match is
         // found.  The code passed into the constructor represents the code to return for the root
@@ -324,12 +370,10 @@ public class GroceryContentProvider extends ContentProvider {
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES + GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES + "/*/*", GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS);
 
-      //TODO NOT SURE IF THIS WILL CONFLICTION WITH BRANDS THEY SHARE THE SAME FORMAT
-      //matcher.addURI(authority, GroceryContract.PATH_GROCERIES + "/*", GROCERIES_WITH_BASIC_DESCRIPTIONS);
 //TODO how to add a grocery item add brand get back the id add basic_Depscrtion get back and id then add the grocery with the id's as location for key values
 
 
-//
+
 
 
 
