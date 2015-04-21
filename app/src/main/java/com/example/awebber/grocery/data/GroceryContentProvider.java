@@ -22,11 +22,14 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class GroceryContentProvider extends ContentProvider {
+    public GroceryContentProvider() {
+    }
+
 //Uri Matcher
 //Content providers implete functionality bases upo uri's passsed ot them
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-
+    //Uri Matcher Match cases
     static final int GROCERIES = 100;
     static final int GROCERIES_WITH_BRANDS = 102;
     static final int GROCERIES_WITH_BASIC_DESCRIPTIONS =103;
@@ -41,6 +44,35 @@ public class GroceryContentProvider extends ContentProvider {
 
     //This defines the "From" statemeny of the Query
     private static final SQLiteQueryBuilder sGroceryByBrandorBasicDescriptionQueryBuilder;
+    private static final SQLiteQueryBuilder sGroceryByBrandQueryBuilder;
+    private static final SQLiteQueryBuilder sGroceryByBasicDescriptionQueryBuilder;
+   static{
+       sGroceryByBrandQueryBuilder  = new SQLiteQueryBuilder();
+       //groceries INNER JOIN brands ON groceries.brand_id = brands._id
+       sGroceryByBrandQueryBuilder.setTables(
+               GroceryContract.GroceryEntry.TABLE_NAME + " INNER JOIN " +
+                       GroceryContract.BrandEntry.TABLE_NAME +
+                       " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
+                       "." + GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY +
+                       " = " + GroceryContract.BrandEntry.TABLE_NAME +
+                       "." + GroceryContract.BrandEntry._ID);
+   }
+
+   static{
+       sGroceryByBasicDescriptionQueryBuilder    = new SQLiteQueryBuilder();
+       //This is an inner join which looks like
+       //groceries INNER JOIN basic_descriptions ON groceries.basic_description_id = basic_description_id
+       sGroceryByBasicDescriptionQueryBuilder.setTables(
+               GroceryContract.GroceryEntry.TABLE_NAME + " INNER JOIN " +
+               " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
+               "." + GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY +
+               " = " + GroceryContract.BasicDescriptionEntry.TABLE_NAME +
+               "." + GroceryContract.BasicDescriptionEntry._ID
+       );
+
+   }
+
+
     static{
         sGroceryByBrandorBasicDescriptionQueryBuilder = new SQLiteQueryBuilder();
 
@@ -61,6 +93,7 @@ public class GroceryContentProvider extends ContentProvider {
                         "." + GroceryContract.BasicDescriptionEntry._ID) ;
 
     }
+
     //Buildings the select statements that set up the condition
     // Where condtion1 (< ?,= ?,<= ?,> ?,>= ? ,= ?)  selectionArgs[]
     //Where Brands.brand_name = ?
@@ -98,7 +131,20 @@ public class GroceryContentProvider extends ContentProvider {
         );
     }
 
-    public GroceryContentProvider() {
+    private Cursor getGrociesByBasicDescription(Uri uri, String[] projection, String sortOrder) {
+        String BasicDescription = GroceryContract.GroceryEntry.getBasicDescFromUri(uri);
+
+        String[] selectionArgs ={BasicDescription} ;
+        String selection = sBasicDescriptionSelection ;
+
+        return sGroceryByBrandorBasicDescriptionQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
     }
     @Override
     public boolean onCreate() {
@@ -215,15 +261,28 @@ public class GroceryContentProvider extends ContentProvider {
         return returnUri;
         }
 
-
-
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-                // Here's the switch statement that, given a URI, will determine what kind of request it is,
+        // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
+
+            //"groceries/brands/*"
+            case  GROCERIES_WITH_BRANDS:
+            {
+                retCursor = getGrociesByBrandName(uri,projection,sortOrder);
+                break;
+            }
+
+            // "groceries/basic_Descriptions/*"
+            case  GROCERIES_WITH_BASIC_DESCRIPTIONS:
+            {
+                retCursor =getGrociesByBasicDescription(uri,projection,sortOrder);
+                break;
+            }
+
             // "groceries/"
             case GROCERIES :
             {    // Return the entire groceries Table
@@ -238,6 +297,7 @@ public class GroceryContentProvider extends ContentProvider {
                 );
                 break;
             }
+
             //"basic_desriptions/"
             case BASIC_DESCRIPTIONS:
             {  // Return the entire basic_desriptions Table
@@ -253,10 +313,11 @@ public class GroceryContentProvider extends ContentProvider {
                 );
                 break;
             }
+
             //"brands/"
             case BRANDS :
             { //Return the entire brands    Table
-                retCursor =mOpenHelper.getReadableDatabase().query(
+                retCursor = mOpenHelper.getReadableDatabase().query(
                         GroceryContract.BrandEntry.TABLE_NAME,
                         projection,
                         selection,
@@ -267,47 +328,18 @@ public class GroceryContentProvider extends ContentProvider {
                 );
                 break;
             }
-   //TODO implement query groceries/brands/*
 
-   /*         //"groceries/brands/*"
-            case  GROCERIES_WITH_BRANDS:
-            {
-             //   retCursor = getGrociesByBrandName();
-                break;
-            }
 
-            // "groceries/basic_Descriptions/*"
-            case  GROCERIES_WITH_BASIC_DESCRIPTIONS:
-            {
 
-                break;
-            }
-
- //TODO implement   query groceries/basic_descriptions/Brands/*
-            // "groceries/basic_descriptions/Brands/*"
+/*
+ //TODO implement   query groceries/basic_descriptions/Brands
+            // "groceries/basic_descriptions/Brands/* /* "
             case GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS:
             {
 
                 break;
             }
 */
-            //TODO implement  query
- /*   case GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS:
-            {
-                retCursor =mOpenHelper.getReadableDatabase().query(
-                        GroceryContract.BrandEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        sortOrder
-                );
-                break;
-            } */
-
-
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -322,15 +354,15 @@ public class GroceryContentProvider extends ContentProvider {
           int rowsUpdated;
 
         switch (match) {
-            case GROCERIES: {      //  (table        values    whereClause   whereArgs)
+            case GROCERIES: {      //  (table ,values,whereClause,whereArgs)
                 rowsUpdated = db.update(GroceryContract.GroceryEntry.TABLE_NAME,values,selection,selectionArgs);
                 break;
             }
-            case BRANDS: {
+            case BRANDS: { //  (table ,values,whereClause,whereArgs)
                 rowsUpdated = db.update(GroceryContract.BrandEntry.TABLE_NAME, values, selection,selectionArgs);
                 break;
             }
-            case BASIC_DESCRIPTIONS: {
+            case BASIC_DESCRIPTIONS: { //  (table ,values,whereClause,whereArgs)
                 rowsUpdated = db.update(GroceryContract.BasicDescriptionEntry.TABLE_NAME, values, selection,selectionArgs);
                 break;
             }
@@ -368,15 +400,12 @@ public class GroceryContentProvider extends ContentProvider {
 
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES + GroceryContract.PATH_BASIC_DESC + "/*", GROCERIES_WITH_BASIC_DESCRIPTIONS);
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES + GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES + "/*/*", GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS);
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +
+                GroceryContract.PATH_BASIC_DESC+
+                GroceryContract.PATH_BRANDS +
+                "/*/*", GROCERIES_WITH_BASIC_DESCRIPTIONS_AND_BRANDS);
 
 //TODO how to add a grocery item add brand get back the id add basic_Depscrtion get back and id then add the grocery with the id's as location for key values
-
-
-
-
-
-
         return matcher;
     }
 

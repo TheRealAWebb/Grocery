@@ -1,5 +1,22 @@
+/*
+ * Title: MainActivity.java
+ * Created by Alton Webber on
+ * Description:
+ *
+ * Purpose:
+ *
+ *
+ *
+ * Usage:
+ *
+ *
+ */
 package com.example.awebber.grocery;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 
@@ -24,18 +41,16 @@ import com.example.awebber.grocery.data.GroceryContract;
 
 public class MainActivity extends ActionBarActivity {
 //private static int grocery_loader_ID =[groceryint];
-
+private final Context mContext = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            //todo DELETE THIS TEST
-        Uri j =   GroceryContract.GroceryEntry.buildGroceriesBasicDescWBrand("Hello", "Wordl");
 
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add( R.id.container, new GroceryFragment() )
+                    .add(R.id.container, new GroceryFragment() )
                     .commit();
         }
     }

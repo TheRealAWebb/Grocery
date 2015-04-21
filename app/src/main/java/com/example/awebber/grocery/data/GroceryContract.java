@@ -68,14 +68,23 @@ public  class GroceryContract  {
         public static Uri buildGroceriesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
+
         //For queries use buildGroceriesBasicDescWBran
         public static Uri buildGroceriesBrand(String brandName) {
-                        return CONTENT_URI.buildUpon().appendPath(PATH_BRANDS).appendPath(brandName).build();
+                        return CONTENT_URI.buildUpon().
+                                appendPath(PATH_BRANDS).
+                                appendPath(brandName).
+                                build();
                    }
+
         //For queries use buildGroceriesBasicDescWBrand
         public static Uri buildGroceriesBasicDesc(String productDescription) {
-            return CONTENT_URI.buildUpon().appendPath(PATH_BASIC_DESC).appendPath(productDescription).build();
+            return CONTENT_URI.buildUpon().
+                    appendPath(PATH_BASIC_DESC).
+                    appendPath(productDescription).
+                    build();
         }
+
         //
         public static Uri buildGroceriesBasicDescWBrand(String productDescription,String brandName) {
          //TODO Delete this test print out
@@ -92,8 +101,8 @@ public  class GroceryContract  {
             return uri.getPathSegments().get(2);
       }
 
-        public static long getBasicDesc(Uri uri) {
-            return Long.parseLong(uri.getPathSegments().get(2));
+        public static String getBasicDescFromUri(Uri uri) {
+            return  uri.getPathSegments().get(2);
         }
     }
 
