@@ -26,15 +26,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.EditText;
+import android.widget.FilterQueryProvider;
 import android.widget.ListView;
 
 import com.example.awebber.grocery.data.GroceryContract;
+import com.example.awebber.grocery.data.GroceryDbHelper;
 
 public class GroceryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static Context mContext ;
@@ -52,6 +56,7 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         Cursor cur = getActivity().getContentResolver().query(GroceryContract.GroceryEntry.CONTENT_URI,
                 null, null, null, null);
 
@@ -61,10 +66,34 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
         EditText grocerySearch = (EditText) rootView.findViewById(R.id.search_products);
 
         ListView groceryListView = (ListView) rootView.findViewById(R.id.list_view_grocery);
-        groceryListView.setAdapter(mGroceryAdapter);
 
-        return rootView;
+        groceryListView.setAdapter(mGroceryAdapter);
+        grocerySearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+
+                mGroceryAdapter.getFilter().filter(s.toString());
+            }
+        });
+
+        mGroceryAdapter.setFilterQueryProvider(new FilterQueryProvider() {
+            public Cursor runQuery(CharSequence constraint) {
+                return   mGroceryAdapter.fetchGroceriesByName(constraint.toString());
+            }
+        });
+                 return rootView;
     }
+
+
+
 
     @Override
     public void onStart() {
@@ -72,7 +101,7 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
         mContext =  getActivity();
         addGrocery("bread");
         addGrocery("Cheese");
-        addGrocery("Malk");
+        addGrocery("MAlk with Vitamin R");
         addGrocery("Soda");
         addGrocery("Chips");
         addGrocery("Apple");
@@ -114,7 +143,7 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mGroceryAdapter.swapCursor(null);
     }
-
+//TODO IMplemete correctly
     long addGrocery(String product_name) {
         long locationId;
 
