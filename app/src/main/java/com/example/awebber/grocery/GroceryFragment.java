@@ -42,7 +42,7 @@ import com.example.awebber.grocery.data.GroceryDbHelper;
 
 public class GroceryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static Context mContext ;
-    private static int GROCERY_LOADER = 0;
+    private static final int GROCERY_LOADER = 0;
     GroceryAdapter mGroceryAdapter;
     public GroceryFragment() {
             }
@@ -118,16 +118,16 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
       //  String locationSetting = Utility.getPreferredLocation(getActivity());
 
-        String[] projection ={GroceryContract.GroceryEntry.COLUMN_NAME};
+       // String[] projection ={GroceryContract.GroceryEntry.COLUMN_NAME};
         // Sort order:  Ascending, by date.
        // String sortOrder = GroceryContract.GroceryEntry.COLUMN_DATE + " ASC";
-        Uri weatherForLocationUri = GroceryContract.GroceryEntry.CONTENT_URI;
+        Uri groceriesUri = GroceryContract.GroceryEntry.CONTENT_URI;
         //todo DELETE THIS TEST FROM HERE
        // Uri j =   GroceryContract.GroceryEntry.CONTENT_URI;
        Log.e("TEST", GroceryContract.GroceryEntry.CONTENT_URI.toString());
       // TO HERE
         return new CursorLoader(getActivity(),
-                weatherForLocationUri,
+                groceriesUri,
                 null,
                 null,
                 null,

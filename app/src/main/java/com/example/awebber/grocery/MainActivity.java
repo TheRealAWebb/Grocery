@@ -42,6 +42,7 @@ import com.example.awebber.grocery.data.GroceryContract;
 public class MainActivity extends ActionBarActivity {
 //private static int grocery_loader_ID =[groceryint];
 private final Context mContext = this;
+    private final String GroceryFRAGMENT_TAG = "GFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +51,7 @@ private final Context mContext = this;
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new GroceryFragment() )
+                    .add(R.id.container, new GroceryFragment() ,GroceryFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -78,5 +79,9 @@ private final Context mContext = this;
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 
 }
