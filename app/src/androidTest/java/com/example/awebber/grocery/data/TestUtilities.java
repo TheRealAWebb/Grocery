@@ -61,7 +61,7 @@ public class TestUtilities extends AndroidTestCase {
         ContentValues GroceryValues = new ContentValues();
         GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY ,BasicDescRowId);
         GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY,brandRowId );
-        GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_NAME, "Pure Sport");
+        GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, "Pure Sport");
 
         return GroceryValues;
     }
@@ -70,7 +70,7 @@ public class TestUtilities extends AndroidTestCase {
     static ContentValues createNikeBrandValues() {
         // Create a new map of values, where column names are the keys
         ContentValues testValues = new ContentValues();
-        testValues.put(GroceryContract.BrandEntry.COLUMN_BRAND_NAME, TEST_BRAND);
+        testValues.put(GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME, TEST_BRAND);
         return testValues;
     }
     static ContentValues createSneakerBasicDescValues() {

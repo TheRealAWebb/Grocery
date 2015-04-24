@@ -9,12 +9,12 @@
     android:orientation="vertical"
     tools:context="com.example.awebber.grocery.MainActivity$GroceryFragment">
 
-     <EditText
+     <SearchView
         android:id="@+id/search_products"
          android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter Product">
-        </EditText>
+        </SearchView>
 
     <ListView
         android:layout_width="match_parent"
@@ -22,6 +22,12 @@
         android:id="@+id/list_view_grocery">
         </ListView>
 
-
+    <!-- view to be shown/hidden on empty list above -->
+    <TextView
+        android:id="@+id/emptyListElem"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="Nothing to show!" />
 
 </LinearLayout>

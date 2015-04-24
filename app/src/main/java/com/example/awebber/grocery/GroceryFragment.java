@@ -13,10 +13,10 @@
  */
 package com.example.awebber.grocery;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
@@ -26,86 +26,95 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.EditText;
-import android.widget.FilterQueryProvider;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.example.awebber.grocery.data.GroceryContract;
-import com.example.awebber.grocery.data.GroceryDbHelper;
 
-public class GroceryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class GroceryFragment extends Fragment implements SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor>{
     private static Context mContext ;
+    // If non-null, this is the current filter the user has provided.
+    String mCurFilter;
     private static final int GROCERY_LOADER = 0;
+
     GroceryAdapter mGroceryAdapter;
     public GroceryFragment() {
             }
+
+   // implemention of SearchView.OnQueryTextListener
+    public boolean onQueryTextChange(String newText) {
+        // Called when the action bar search text has changed.  Update
+        // the search filter, and restart the loader to do a new query
+        // with this filter.
+        mCurFilter = !TextUtils.isEmpty(newText) ? newText : null;
+        getLoaderManager().restartLoader(GROCERY_LOADER, null, this);
+        return true;
+    }
+    @Override public boolean onQueryTextSubmit(String query) {
+        // Don't care about this.
+        return true;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        mContext =  getActivity();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Cursor cur = getActivity().getContentResolver().query(GroceryContract.GroceryEntry.CONTENT_URI,
-                null, null, null, null);
-
-        mGroceryAdapter = new GroceryAdapter(getActivity(),cur,0);
+        mGroceryAdapter = new GroceryAdapter(getActivity(),null,0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        EditText grocerySearch = (EditText) rootView.findViewById(R.id.search_products);
+        SearchView grocerySearch = ( SearchView) rootView.findViewById(R.id.search_products);
+        grocerySearch.setOnQueryTextListener(this);
 
         ListView groceryListView = (ListView) rootView.findViewById(R.id.list_view_grocery);
-
+        View empty = rootView.findViewById(R.id.emptyListElem);
+        groceryListView.setEmptyView(empty);
         groceryListView.setAdapter(mGroceryAdapter);
-        grocerySearch.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {
+        /*TODO Onclick listern that starts the detail Actitvity and passes the URI to query the data
+        and a
+        */
+/*
+        // We'll call our MainActivity
+        groceryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            // CursorAdapter returns a cursor at the correct position for getItem(), or null
+            // if it cannot seek to that position.
+            Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+            if (cursor != null) {
+                String locationSetting = Utility.getPreferredLocation(getActivity());
+                Intent intent = new Intent(getActivity(), GroceryDetailActivity.class)
+                .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                ));
+                startActivity(intent);
             }
+        }
+    });
 
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
+*/
 
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-
-                mGroceryAdapter.getFilter().filter(s.toString());
-            }
-        });
-
-        mGroceryAdapter.setFilterQueryProvider(new FilterQueryProvider() {
-            public Cursor runQuery(CharSequence constraint) {
-                return   mGroceryAdapter.fetchGroceriesByName(constraint.toString());
-            }
-        });
                  return rootView;
     }
-
-
-
 
     @Override
     public void onStart() {
         super.onStart();
-        mContext =  getActivity();
-        addGrocery("bread");
-        addGrocery("Cheese");
-        addGrocery("MAlk with Vitamin R");
-        addGrocery("Soda");
-        addGrocery("Chips");
-        addGrocery("Apple");
-
     }
 
     @Override
@@ -115,21 +124,45 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-      //  String locationSetting = Utility.getPreferredLocation(getActivity());
-
-       // String[] projection ={GroceryContract.GroceryEntry.COLUMN_NAME};
-        // Sort order:  Ascending, by date.
-       // String sortOrder = GroceryContract.GroceryEntry.COLUMN_DATE + " ASC";
+    public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
+        String selection;
         Uri groceriesUri = GroceryContract.GroceryEntry.CONTENT_URI;
+        //
+      //  groceriesUri =
         //todo DELETE THIS TEST FROM HERE
-       // Uri j =   GroceryContract.GroceryEntry.CONTENT_URI;
-       Log.e("TEST", GroceryContract.GroceryEntry.CONTENT_URI.toString());
+         Log.e("TEST", GroceryContract.GroceryEntry.CONTENT_URI.toString());
       // TO HERE
+        String[] projections = {GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, GroceryContract.GroceryEntry._ID };
+        Log.e("TEST", GroceryContract.GroceryEntry.CONTENT_URI.toString()+ "/"+GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME);
+        if(mCurFilter == null ){
+            //A Value that will never be used
+             selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%555%' ";
+
+         }
+        else {
+         //Search  brands.brand_name ,basic_descriptions.product_type, groceries.product_name
+         //For a statment that matches the selection
+           //TODO Create a query that serachs all tables for the information
+           /* selection = GroceryContract.GroceryEntry.TABLE_NAME + "."+
+                GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +
+                " like '%" + mCurFilter + "%' " +
+                "OR" +
+                GroceryContract.BrandEntry.TABLE_NAME + "."+
+                GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
+                " like '%" + mCurFilter + "%' " +
+                "OR" +
+                GroceryContract.BasicDescriptionEntry.TABLE_NAME + "."+
+                GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE+
+                " like '%" + mCurFilter + "%' " ;*/
+
+
+         selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%" + mCurFilter + "%'" ;
+        }
+
         return new CursorLoader(getActivity(),
                 groceriesUri,
-                null,
-                null,
+                projections,
+                selection,
                 null,
                 null);
 
@@ -151,7 +184,7 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
         Cursor locationCursor = mContext.getContentResolver().query(
                 GroceryContract.GroceryEntry.CONTENT_URI,
                 new String[]{GroceryContract.GroceryEntry._ID},
-                GroceryContract.GroceryEntry.COLUMN_NAME + " = ?",
+                GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " = ?",
                 new String[]{product_name},
                 null);
 
@@ -165,7 +198,7 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
 
             // Then add the data, along with the corresponding name of the data type,
             // so the content provider knows what kind of value is being inserted.
-            locationValues.put(GroceryContract.GroceryEntry.COLUMN_NAME, product_name);
+            locationValues.put(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, product_name);
             locationValues.put(GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY,0);
             locationValues.put(GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY,0);
             // Finally, insert location data into the database.
@@ -182,8 +215,4 @@ public class GroceryFragment extends Fragment implements LoaderManager.LoaderCal
         // Wait, that worked?  Yes!
         return locationId;
     }
-
-
-
-
 }

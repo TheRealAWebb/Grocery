@@ -36,8 +36,8 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         final String SQL_CREATE_BRANDS_TABLE ="CREATE TABLE "+
                 BrandEntry.TABLE_NAME + " (" +
                 BrandEntry._ID + " INTEGER PRIMARY KEY, " +
-                BrandEntry.COLUMN_BRAND_NAME + " TEXT NOT NULL, " +
-                " UNIQUE (" + BrandEntry.COLUMN_BRAND_NAME +
+                BrandEntry.COLUMN_PRODUCT_BRAND_NAME + " TEXT NOT NULL, " +
+                " UNIQUE (" + BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
                      ") ON CONFLICT REPLACE);";
 
 
@@ -48,16 +48,18 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
                " UNIQUE (" +  BasicDescriptionEntry.COLUMN_PRODUCT_TYPE +
                                 ") ON CONFLICT REPLACE);";
 
+
         final String SQL_CREATE_GROCERIES_TABLE = "CREATE TABLE " +
                 GroceryEntry.TABLE_NAME + " (" +
                 GroceryEntry._ID + " INTEGER PRIMARY KEY, " +
                 GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY  + " INTEGER NOT NULL, " +
+                GroceryEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
                 GroceryEntry.COLUMN_BRAND_LOC_KEY  + " INTEGER NOT NULL, " +
-                // the ID of the location entry associated with this weather data
-                GroceryEntry.COLUMN_NAME + " TEXT NOT NULL, " +
+
 
                 // Set up the basic_description column as a foreign key to basic_description table.
-                " FOREIGN KEY (" + GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY + ") REFERENCES " +
+                " FOREIGN KEY " +"(" + GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY + ")" +
+                " REFERENCES " +
                 BasicDescriptionEntry.TABLE_NAME + " (" + BasicDescriptionEntry._ID + "), " +
 
                 // Set up the brand column as a foreign key to brands table.
@@ -66,7 +68,7 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
 
                 // To assure the application have just one weather entry per day
                 // per location, it's created a UNIQUE constraint with REPLACE strategy
-                " UNIQUE (" + GroceryEntry.COLUMN_NAME + ", " +
+                " UNIQUE (" + GroceryEntry.COLUMN_PRODUCT_NAME + ", " +
                 GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY + ", " +
                 GroceryEntry.COLUMN_BRAND_LOC_KEY + ") ON CONFLICT REPLACE);";
         sqLiteDatabase.execSQL(SQL_CREATE_BRANDS_TABLE);

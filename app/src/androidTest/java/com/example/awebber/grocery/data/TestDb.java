@@ -79,7 +79,7 @@ public class  TestDb extends AndroidTestCase {
         // Build a HashSet of all of the column names we want to look for
         final HashSet<String> GroceryColumnHashSet = new HashSet<String>();
         GroceryColumnHashSet.add(GroceryContract.GroceryEntry._ID);
-        GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_NAME);
+        GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME);
         GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY);
         GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY);
 
@@ -107,7 +107,7 @@ public class  TestDb extends AndroidTestCase {
         // Build a HashSet of all of the column names we want to look for
         final HashSet<String> BrandColumnHashSet = new HashSet<String>();
         BrandColumnHashSet.add(GroceryContract.BrandEntry._ID);
-        BrandColumnHashSet.add(GroceryContract.BrandEntry.COLUMN_BRAND_NAME);
+        BrandColumnHashSet.add(GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME);
 
         int columnBrandNameIndex = c.getColumnIndex("name");
         do {

@@ -99,7 +99,7 @@ public class GroceryContentProvider extends ContentProvider {
     //Where Brands.brand_name = ?
     private static final String sBrandSelection =
             GroceryContract.BrandEntry.TABLE_NAME +
-                    "." + GroceryContract.BrandEntry.COLUMN_BRAND_NAME + " = ? ";
+                    "." + GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME + " = ? ";
 
     //Where basic_descriptions.product_type = ?
     private static final String sBasicDescriptionSelection =
@@ -111,7 +111,7 @@ public class GroceryContentProvider extends ContentProvider {
             GroceryContract.BasicDescriptionEntry.TABLE_NAME +
                     "." + GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE + " = ? AND " +
                     GroceryContract.BrandEntry.TABLE_NAME +
-                    "." + GroceryContract.BrandEntry.COLUMN_BRAND_NAME + " = ? ";
+                    "." + GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME + " = ? ";
 
     //When the Uri is passed through the Uri matcher this function will be called
     //During the query and return this cursor

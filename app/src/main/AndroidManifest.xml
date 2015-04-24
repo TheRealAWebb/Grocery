@@ -23,6 +23,15 @@
             android:enabled="true"
             android:exported="true" >
         </provider>
+
+        <activity
+            android:name=".GroceryDetailActivity"
+            android:label="@string/title_activity_grocery_detail"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.awebber.grocery.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

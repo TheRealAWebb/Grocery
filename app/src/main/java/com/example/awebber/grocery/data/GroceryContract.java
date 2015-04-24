@@ -61,7 +61,7 @@ public  class GroceryContract  {
         public static final String COLUMN_BRAND_LOC_KEY = "brand_id";
 
         // The name of the product Coconut oil,Pure Sport,Procell
-        public static final String  COLUMN_NAME = "product_name";
+        public static final String COLUMN_PRODUCT_NAME = "product_name";
         //Build a uri with an id number @ the end used for queries with id
 
         //For queries use buildGroceriesBasicDescWBran
@@ -120,7 +120,7 @@ public  class GroceryContract  {
         public static final String TABLE_NAME = "brands";
 
         // The of the name items Brand Item e.g DURACELL,LUBRIDERM,GATORADE
-        public static final String COLUMN_BRAND_NAME = "brand_name";
+        public static final String COLUMN_PRODUCT_BRAND_NAME = "brand_name";
 
         public static Uri buildBrandsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
