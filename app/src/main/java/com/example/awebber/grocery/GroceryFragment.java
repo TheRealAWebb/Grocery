@@ -89,7 +89,7 @@ public class GroceryFragment extends Fragment implements SearchView.OnQueryTextL
         /*TODO Onclick listern that starts the detail Actitvity and passes the URI to query the data
         and a
         */
-/*
+
         // We'll call our MainActivity
         groceryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
@@ -98,16 +98,16 @@ public class GroceryFragment extends Fragment implements SearchView.OnQueryTextL
             // if it cannot seek to that position.
             Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
             if (cursor != null) {
-                String locationSetting = Utility.getPreferredLocation(getActivity());
-                Intent intent = new Intent(getActivity(), GroceryDetailActivity.class)
-                .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)
-                ));
+             //   String locationSetting = Utility.getPreferredLocation(getActivity());
+                Intent intent = new Intent(getActivity(), GroceryDetailActivity.class);
+             //   .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(locationSetting, cursor.getLong(COL_WEATHER_DATE)
+             //   ));
                 startActivity(intent);
             }
         }
     });
 
-*/
+
 
                  return rootView;
     }
@@ -143,17 +143,17 @@ public class GroceryFragment extends Fragment implements SearchView.OnQueryTextL
          //Search  brands.brand_name ,basic_descriptions.product_type, groceries.product_name
          //For a statment that matches the selection
            //TODO Create a query that serachs all tables for the information
-           /* selection = GroceryContract.GroceryEntry.TABLE_NAME + "."+
+           selection = GroceryContract.GroceryEntry.TABLE_NAME + "."+
                 GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +
                 " like '%" + mCurFilter + "%' " +
-                "OR" +
+                "UNION ALL" +"SELECT" +
                 GroceryContract.BrandEntry.TABLE_NAME + "."+
                 GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
                 " like '%" + mCurFilter + "%' " +
-                "OR" +
+                "UNION ALL" +"SELECT"+
                 GroceryContract.BasicDescriptionEntry.TABLE_NAME + "."+
                 GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE+
-                " like '%" + mCurFilter + "%' " ;*/
+                " like '%" + mCurFilter + "%' " ;
 
 
          selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%" + mCurFilter + "%'" ;

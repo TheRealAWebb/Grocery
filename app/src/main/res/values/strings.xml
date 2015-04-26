@@ -6,7 +6,12 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+
+    <!-- Fragment_Grocery -->
+    <string name="search_products_hint">Enter Product To search</string>
+    <string name="empty_List_Elem_text">No Results Found</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_grocery">Grocery</string>
     <string name="title_activity_grocery_detail">GroceryDetailActivity</string>

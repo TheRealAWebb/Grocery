@@ -13,7 +13,7 @@
         android:id="@+id/search_products"
          android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter Product">
+        android:hint="@string/search_products_hint">
         </SearchView>
 
     <ListView
@@ -28,6 +28,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
-        android:text="Nothing to show!" />
+        android:text="@string/empty_List_Elem_text" />
 
 </LinearLayout>
