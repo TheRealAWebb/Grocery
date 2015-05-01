@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <color name="menu_blue">'#33B5E5'</color>
+ <!--   <color name="opaque_red">#f00</color> -->
+    <color name="menus_blue">#33cccc</color>
+</resources>
