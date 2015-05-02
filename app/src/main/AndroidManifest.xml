@@ -8,13 +8,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".GrocerySearchActivity"
             android:label="@string/title_activity_main" >
-            <intent-filter android:label="@string/app_name" >
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider
@@ -27,10 +23,20 @@
         <activity
             android:name=".GroceryDetailActivity"
             android:label="@string/title_activity_grocery_detail"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".GrocerySearchActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.awebber.grocery.MainActivity" />
+                android:value=".GrocerySearchActivity" />
+        </activity>
+        <activity
+            android:name=".GroceryMainActivity"
+            android:label="@string/title_activity_grocery_main" >
+
+            <intent-filter android:label="@string/app_name" >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

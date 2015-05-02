@@ -22,6 +22,7 @@ import android.util.Log;
  *
  */
 public  class GroceryContract  {
+    public static final String TAG =" GroceryContract ";
     // The "Content authority" is a name for the entire content provider, similar to the
     // relationship between a domain name and its website.  A convenient string to use for the
     // content authority is the package name for the app, which is guaranteed to be unique on the
@@ -61,9 +62,10 @@ public  class GroceryContract  {
 
         // The name of the product Coconut oil,Pure Sport,Procell
         public static final String COLUMN_PRODUCT_NAME = "product_name";
+
         //Build a uri with an id number @ the end used for queries with id
 
-        //For queries use buildGroceriesBasicDescWBran
+         //For queries use buildGroceriesBasicDescWBran
         public static Uri buildGroceriesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
@@ -87,7 +89,7 @@ public  class GroceryContract  {
         //
         public static Uri buildGroceriesBasicDescWBrand(String productDescription,String brandName) {
          //TODO Delete this test print out
-          Log.e("TEST", CONTENT_URI.buildUpon().appendPath(productDescription).appendPath(brandName).appendQueryParameter("This", "That").build().toString());
+          Log.e(TAG, CONTENT_URI.buildUpon().appendPath(productDescription).appendPath(brandName).appendQueryParameter("This", "That").build().toString());
 
             return CONTENT_URI.
                     buildUpon().

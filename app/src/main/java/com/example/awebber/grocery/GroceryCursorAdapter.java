@@ -27,10 +27,10 @@ import com.example.awebber.grocery.data.GroceryContract;
 /**
  * Created by awebber on 4/20/15.
  */
-public class GroceryAdapter extends CursorAdapter {
-    private static final String TAG = "GroceryAdapter";
+public class GroceryCursorAdapter extends CursorAdapter {
+    private static final String TAG = "GroceryCursorAdapter";
     private Context mContext;
-    public GroceryAdapter(Context context, Cursor c, int flags) {
+    public GroceryCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         mContext =context;
 
@@ -48,10 +48,13 @@ public class GroceryAdapter extends CursorAdapter {
         // our view is pretty simple here --- just a text view
         // we'll keep the UI functional with a simple (and slow!) binding.
 
+       //cursor.getString(0)) Represents the first column returned
+       //In the case the Table Name the cursor.getString(1)) will be the item
         Log.e("cursor.getCount()", String.valueOf(cursor.getCount()));
         TextView tv = (TextView) view.findViewById(R.id.list_item_grocery_textview);
-        Log.e("cursor.getString", cursor.getString(cursor.getColumnIndex(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME)));
-        tv.setText(cursor.getString(cursor.getColumnIndex(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME)));
+        Log.e("cursor.getString", cursor.getString(0));
+        Log.e("cursor.getString", cursor.getString(0));
+        tv.setText( "Table: " + cursor.getString(0) +"Value: "+cursor.getString(1) );
     }
 
 }

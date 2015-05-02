@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.test.AndroidTestCase;
+import android.util.Log;
+
 import com.example.awebber.grocery.data.GroceryContract.GroceryEntry;
 import com.example.awebber.grocery.data.GroceryContract.BrandEntry;
 import com.example.awebber.grocery.data.GroceryContract.BasicDescriptionEntry;
@@ -197,6 +199,7 @@ public class TestProvider extends AndroidTestCase {
         assertTrue("Unable to Insert BasicDescriptionEntry into the Database "  , basicDescRowId != -1);
 
      //   db.close();
+        Log.e("TEST URI","Unknown uri: " + BasicDescriptionEntry.CONTENT_URI.toString());
 
         // Test the basic content provider query
         Cursor basicDescCursor = mContext.getContentResolver().query(

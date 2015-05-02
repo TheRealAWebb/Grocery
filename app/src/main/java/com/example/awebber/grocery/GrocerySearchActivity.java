@@ -21,7 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity {
+public class GrocerySearchActivity extends ActionBarActivity {
 
 
     private final String GroceryFRAGMENT_TAG = "GFTAG";
@@ -33,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new GroceryFragment() ,GroceryFRAGMENT_TAG)
+                    .add(R.id.container, new GrocerySearchFragment() ,GroceryFRAGMENT_TAG)
                     .commit();
         }
     }
@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+          super.onResume();
     }
 
 }

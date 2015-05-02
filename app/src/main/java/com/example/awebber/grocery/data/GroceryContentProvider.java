@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 public class GroceryContentProvider extends ContentProvider {
     public GroceryContentProvider() {
@@ -27,7 +28,7 @@ public class GroceryContentProvider extends ContentProvider {
 
 //Uri Matcher
 //Content providers implete functionality bases upo uri's passsed ot them
-
+String TAG ="Content Provider";
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     //Uri Matcher Match cases
     static final int GROCERIES = 100;
@@ -85,7 +86,7 @@ public class GroceryContentProvider extends ContentProvider {
                         " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
                         "." + GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY +
                         " = " + GroceryContract.BrandEntry.TABLE_NAME +
-                        "." + GroceryContract.BrandEntry._ID + "%n" +
+                        "." + GroceryContract.BrandEntry._ID +
                         " INNER JOIN " + GroceryContract.BasicDescriptionEntry.TABLE_NAME +
                         " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
                         "." + GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY +
@@ -267,6 +268,7 @@ public class GroceryContentProvider extends ContentProvider {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
         Cursor retCursor;
+        //Log.i(TAG,GROCERIES_WITH_BRANDS.);
         switch (sUriMatcher.match(uri)) {
 
             //"groceries/brands/*"
@@ -328,9 +330,6 @@ public class GroceryContentProvider extends ContentProvider {
                 );
                 break;
             }
-
-
-
 /*
  //TODO implement   query groceries/basic_descriptions/Brands
             // "groceries/basic_descriptions/Brands/* /* "
@@ -341,7 +340,7 @@ public class GroceryContentProvider extends ContentProvider {
             }
 */
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException( "Unknown uri: " + uri);
         }
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
@@ -394,12 +393,12 @@ public class GroceryContentProvider extends ContentProvider {
         // For each type of URI you want to add, create a corresponding code.
         //The GroceryContract.GroceryEntry.build** will build
         //Uri's to match these formats
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES, GROCERIES);
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES , GROCERIES);
         matcher.addURI(authority, GroceryContract.PATH_BRANDS , BRANDS);
         matcher.addURI(authority, GroceryContract.PATH_BASIC_DESC , BASIC_DESCRIPTIONS);
-
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES + GroceryContract.PATH_BASIC_DESC + "/*", GROCERIES_WITH_BASIC_DESCRIPTIONS);
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES + GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
+//com.example.awebber.grocery/groceries/brands/*
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/" +GroceryContract.PATH_BASIC_DESC + "/*", GROCERIES_WITH_BASIC_DESCRIPTIONS);
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+ GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES +
                 GroceryContract.PATH_BASIC_DESC+
                 GroceryContract.PATH_BRANDS +

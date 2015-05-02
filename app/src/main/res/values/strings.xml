@@ -6,6 +6,13 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
 
+    <!-- Fragment_Grocery_main -->
+    <string name="fridge_pantry">In the Fridge and Pantry</string>
+    <string name="grocery_shopping_list">Grocery Shopping List</string>
+
+    <string name="tab_fridge_pantry">In the Fridge and Pantry</string>
+    <string name="tab_grocery_shopping_list">Grocery Shopping List</string>
+    <string name="tab_search_grocery_shopping_list">Search groceries List</string>
 
     <!-- Fragment_Grocery -->
     <string name="search_products_hint">Enter Product To search</string>
@@ -15,4 +22,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_grocery">Grocery</string>
     <string name="title_activity_grocery_detail">GroceryDetailActivity</string>
+    <string name="title_activity_grocery_main">GroceryMainActivity</string>
 </resources>
