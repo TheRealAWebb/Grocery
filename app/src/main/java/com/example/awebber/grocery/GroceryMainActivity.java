@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 
 
 public class GroceryMainActivity extends AppCompatActivity {
@@ -16,7 +17,9 @@ public class GroceryMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grocery_main);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        toolbar.setLogo(R.drawable.awebber);
+        setSupportActionBar(toolbar);
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             GroceryMainFragment fragment = new GroceryMainFragment();
