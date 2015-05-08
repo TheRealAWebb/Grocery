@@ -1,6 +1,5 @@
-package com.example.awebber.grocery;
+package com.example.awebber.grocery.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;

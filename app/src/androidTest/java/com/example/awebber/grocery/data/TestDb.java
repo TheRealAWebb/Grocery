@@ -51,7 +51,7 @@ public class  TestDb extends AndroidTestCase {
         // Note that there will be another table in the DB that stores the
         // Android metadata (db version information)
         final HashSet<String> tableNameHashSet = new HashSet<String>();
-        tableNameHashSet.add(GroceryContract.BasicDescriptionEntry.TABLE_NAME);
+        tableNameHashSet.add(GroceryContract.CategoryEntry.TABLE_NAME);
         tableNameHashSet.add(GroceryContract.BrandEntry.TABLE_NAME);
         tableNameHashSet.add(GroceryContract.GroceryEntry.TABLE_NAME);
 
@@ -89,7 +89,7 @@ public class  TestDb extends AndroidTestCase {
         GroceryColumnHashSet.add(GroceryContract.GroceryEntry._ID);
         GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME);
         GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY);
-        GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY);
+        GroceryColumnHashSet.add(GroceryContract.GroceryEntry.COLUMN_CATEGORY_LOC_KEY);
 
 
         int columnNameIndex = c.getColumnIndex("name");
@@ -129,7 +129,7 @@ public class  TestDb extends AndroidTestCase {
                 BrandColumnHashSet.isEmpty());
 //*************************************************************************************
 // now, do our tables contain the correct columns?
-        c = db.rawQuery("PRAGMA table_info(" + GroceryContract.BasicDescriptionEntry.TABLE_NAME+ ")",
+        c = db.rawQuery("PRAGMA table_info(" + GroceryContract.CategoryEntry.TABLE_NAME+ ")",
                 null);
 
         assertTrue("Error: This means that we were unable to query the database for table information.",
@@ -137,8 +137,8 @@ public class  TestDb extends AndroidTestCase {
 
         // Build a HashSet of all of the column names we want to look for
         final HashSet<String> BasicDescriptionEntryColumnHashSet = new HashSet<String>();
-        BasicDescriptionEntryColumnHashSet.add(GroceryContract.BasicDescriptionEntry._ID);
-        BasicDescriptionEntryColumnHashSet.add(GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE);
+        BasicDescriptionEntryColumnHashSet.add(GroceryContract.CategoryEntry._ID);
+        BasicDescriptionEntryColumnHashSet.add(GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME);
         int columnBasicDescriptionNameIndex = c.getColumnIndex("name");
         do {
             String columnName = c.getString(columnBasicDescriptionNameIndex);
@@ -276,7 +276,7 @@ public class  TestDb extends AndroidTestCase {
 
         // Third Step: Insert ContentValues into database and get a row ID back
         long BasiceDescId;
-        BasiceDescId = db.insert(GroceryContract.BasicDescriptionEntry.TABLE_NAME, null, testValues);
+        BasiceDescId = db.insert(GroceryContract.CategoryEntry.TABLE_NAME, null, testValues);
 
         // Verify we got a row back.
         assertTrue(BasiceDescId != -1);
@@ -287,7 +287,7 @@ public class  TestDb extends AndroidTestCase {
         // Fourth Step: Query the database and receive a Cursor back
         // A cursor is your primary interface to the query results.
         Cursor cursor = db.query(
-                GroceryContract.BasicDescriptionEntry.TABLE_NAME,  // Table to Query
+                GroceryContract.CategoryEntry.TABLE_NAME,  // Table to Query
                 null, // all columns
                 null, // Columns for the "where" clause
                 null, // Values for the "where" clause

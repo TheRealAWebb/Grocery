@@ -1,16 +1,13 @@
 package com.example.awebber.grocery;
 
-import android.support.v7.app.ActionBarActivity;
-import android.app.Fragment;
+
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 
-public class GroceryDetailActivity extends ActionBarActivity {
+public class GroceryDetailActivity extends AppCompatActivity {
     private final String GROCERY_DETAIL_FRAGMENT_TAG = "GDFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

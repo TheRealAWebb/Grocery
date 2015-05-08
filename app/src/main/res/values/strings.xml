@@ -13,14 +13,26 @@
     <string name="tab_fridge_pantry">In the Fridge and Pantry</string>
     <string name="tab_grocery_shopping_list">Grocery Shopping List</string>
     <string name="tab_search_grocery_shopping_list">Search groceries List</string>
+    <string name="tab_Categories">Categories</string>
 
     <!-- Fragment_Grocery -->
     <string name="search_products_hint">Enter Product To search</string>
     <string name="empty_List_Elem_text">No Results Found</string>
+      <!-- Fragment Grocery Category   -->
+    <string name="add_category">add category</string>
+
+    <!-- Fragment Grocery Add Category   -->
+    <string name="category_name">Category Name</string>
+    <string name="category_hint">Enter Category Name</string>
+    <string name="confirm_category">confirm category</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_grocery">Grocery</string>
     <string name="title_activity_grocery_detail">GroceryDetailActivity</string>
     <string name="title_activity_grocery_main">GroceryMainActivity</string>
+    <string name="title_activity_grocery_inventory">GroceryInventory</string>
+    <string name="title_activity_grocery_category">GroceryCategoryActivity</string>
+    <string name="title_activity_grocery_add_category">GroceryAddCategory</string>
 </resources>

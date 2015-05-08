@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.example.awebber.grocery.data.GroceryContract.GroceryEntry;
 import com.example.awebber.grocery.data.GroceryContract.BrandEntry;
-import com.example.awebber.grocery.data.GroceryContract.BasicDescriptionEntry;
+import com.example.awebber.grocery.data.GroceryContract.CategoryEntry;
 /**
  * Created by awebber on 4/16/15.
  */
@@ -42,7 +42,7 @@ public class TestProvider extends AndroidTestCase {
                 null
         );
         mContext.getContentResolver().delete(
-                BasicDescriptionEntry.CONTENT_URI,
+                CategoryEntry.CONTENT_URI,
                 null,
                 null
         );
@@ -67,7 +67,7 @@ public class TestProvider extends AndroidTestCase {
         assertEquals("Error: Records not deleted from Brands table during delete", 0, cursor.getCount());
         cursor.close();
         cursor = mContext.getContentResolver().query(
-                BasicDescriptionEntry.CONTENT_URI,
+                GroceryContract.CategoryEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -88,7 +88,7 @@ public class TestProvider extends AndroidTestCase {
 
         db.delete(GroceryEntry.TABLE_NAME, null, null);
         db.delete(BrandEntry.TABLE_NAME, null, null);
-        db.delete(BasicDescriptionEntry.TABLE_NAME, null, null);
+        db.delete(GroceryContract.CategoryEntry.TABLE_NAME, null, null);
         db.close();
     }
 
@@ -155,10 +155,10 @@ public class TestProvider extends AndroidTestCase {
                 BrandEntry.CONTENT_TYPE, type);
 
         // content://com.example.awebber.grocery/basic_description/
-        type = mContext.getContentResolver().getType(BasicDescriptionEntry.CONTENT_URI);
+        type = mContext.getContentResolver().getType(GroceryContract.CategoryEntry.CONTENT_URI);
         // vnd.android.cursor.dir/com.example.awebber.grocery/basic_description
-        assertEquals("Error: the BasicDescriptionEntry CONTENT_URI should return BasicDescriptionEntry.CONTENT_TYPE",
-                BasicDescriptionEntry.CONTENT_TYPE, type);
+        assertEquals("Error: the CategoryEntry CONTENT_URI should return CategoryEntry.CONTENT_TYPE",
+                GroceryContract.CategoryEntry.CONTENT_TYPE, type);
 
 
 /*
@@ -190,20 +190,20 @@ public class TestProvider extends AndroidTestCase {
          ContentValues testValues = TestUtilities.createSneakerBasicDescValues();
         // Register a content observer for our insert.  This time, directly with the content resolver
         TestUtilities.TestContentObserver tco = TestUtilities.getTestContentObserver();
-        mContext.getContentResolver().registerContentObserver(BasicDescriptionEntry.CONTENT_URI, true, tco);
-        Uri locationUri = mContext.getContentResolver().insert(BasicDescriptionEntry.CONTENT_URI, testValues);
+        mContext.getContentResolver().registerContentObserver(GroceryContract.CategoryEntry.CONTENT_URI, true, tco);
+        Uri locationUri = mContext.getContentResolver().insert(CategoryEntry.CONTENT_URI, testValues);
         tco.waitForNotificationOrFail();
         mContext.getContentResolver().unregisterContentObserver(tco);
 
         long basicDescRowId = ContentUris.parseId(locationUri);
-        assertTrue("Unable to Insert BasicDescriptionEntry into the Database "  , basicDescRowId != -1);
+        assertTrue("Unable to Insert CategoryEntry into the Database "  , basicDescRowId != -1);
 
      //   db.close();
-        Log.e("TEST URI","Unknown uri: " + BasicDescriptionEntry.CONTENT_URI.toString());
+        Log.e("TEST URI","Unknown uri: " + GroceryContract.CategoryEntry.CONTENT_URI.toString());
 
         // Test the basic content provider query
         Cursor basicDescCursor = mContext.getContentResolver().query(
-                BasicDescriptionEntry.CONTENT_URI,
+                GroceryContract.CategoryEntry.CONTENT_URI,
                 null,
                 null,
                 null,
@@ -217,7 +217,7 @@ public class TestProvider extends AndroidTestCase {
         // level 19 or greater because getNotificationUri was added in API level 19.
         if (Build.VERSION.SDK_INT >= 19) {
             assertEquals("Error: Basic Description Query did not properly set NotificationUri",
-                    basicDescCursor.getNotificationUri(), BasicDescriptionEntry.CONTENT_URI);
+                    basicDescCursor.getNotificationUri(), GroceryContract.CategoryEntry.CONTENT_URI);
         }
     }
   /*

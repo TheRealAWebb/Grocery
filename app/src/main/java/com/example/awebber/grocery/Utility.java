@@ -2,16 +2,11 @@ package com.example.awebber.grocery;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.content.res.Resources;
-import android.os.Environment;
-import android.util.Log;
 
 import com.example.awebber.grocery.data.GroceryContract;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,20 +33,19 @@ public class Utility {
 
     }
 
-    public static String  groceryDetailTableIdentifer(String theTable){
+    public static String  groceryDetailTableIdentifer(String theTable,String theValue){
     String returnString ="None of the following";
     switch (theTable){
         case GroceryContract.GroceryEntry.TABLE_NAME: {
-            returnString =" Is a grocery item" ;
-
+            returnString = theValue + " is a item "  ;
             break;
         }
-        case GroceryContract.BasicDescriptionEntry.TABLE_NAME: {
-            returnString =  " basic Description ";
+        case GroceryContract.CategoryEntry.TABLE_NAME: {
+            returnString =  theValue + " is a Category Some " +theValue +" Are" ;
             break;
         }
         case GroceryContract.BrandEntry.TABLE_NAME: {
-            returnString =    " Is a Brand" ;
+            returnString = theValue + " is a Brand other products by " +theValue +" Are" ;
             break;
         }
     }

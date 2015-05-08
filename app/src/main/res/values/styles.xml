@@ -1,8 +1,33 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/menu_white_text</item>
+        <item name="colorPrimaryDark">@color/logo_blue</item>
+        <item name="android:textColorPrimary">@color/logo_blue</item>
+
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+
+    </style>
+
+
+    <!-- Main activity theme. -->
+        <style name="GroceryTheme" parent="AppTheme">
+            <item name="actionBarStyle">@style/ActionBar.Solid.Grocery.NoTitle</item>
+        </style>
+
+
+
+        <!-- main activity action bar styles -->
+        <style name="ActionBar.Solid.Grocery.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+            <item name="displayOptions">useLogo|showHome</item>
+            <item name="logo">@drawable/awebber</item>
+
+        </style>
+
+
 
 </resources>

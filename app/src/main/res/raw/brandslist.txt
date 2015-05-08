@@ -173,10 +173,10 @@ Rich Products
 Richelieu Foods
 Rosa Food
 Ruiz Foods
-Sabra (company)
+Sabra
 Sara Lee Corporation
 Scharffen Berger Chocolate Maker
-Schwartz (brand)
+Schwartz
 Scorpion Bay Hot Sauce
 Seattle's Best Coffee
 Seeds of Change
@@ -185,7 +185,7 @@ Silver Spring Foods
 Smith Frozen Foods
 Smithfield Foods
 The J.M. Smucker Company
-Solae (company)
+Solae
 Southern Recipe
 Spangler Candy Company
 Standard Brands
@@ -203,9 +203,9 @@ Tazo
 Thanasi Foods
 Topps Meat Company
 TreeHouse Foods
-Turbana (company)
-Turtle Mountain (company)
-Two Leaves and a Bud (Tea Company)
+Turbana
+Turtle Mountain
+Two Leaves and a Bud
 Tyson Foods
 U.S. Mills
 Urban Accents
@@ -224,12 +224,14 @@ Wright County Egg
 A-1 Steak Sauce
 Act II Microwave Popcorn
 Agri-Link Foods
-Air Crisps (Nabisco)
+Air Crisps
+Nabisco
 Alka-Seltzer: Feel Better Fast
 American Almond
 American Rice, Inc.
 American Roland Food Corporation
-Apple Jacks (Kellogg's)
+Apple Jacks
+Kellogg's
 Apple Time
 Archway Cookies
 Argo Cornstarch

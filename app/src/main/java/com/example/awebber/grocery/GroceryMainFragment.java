@@ -7,8 +7,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.example.awebber.grocery.adapter.GroceryPagerAdapter;
 import com.example.awebber.grocery.view.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -18,15 +18,18 @@ import java.util.List;
  * Created by awebber on 5/1/15.
  */
 public class GroceryMainFragment extends Fragment {
+    static final CharSequence CategoryFragment = ("GroceryCategoryFragment");
+    static final CharSequence InventoryFragment = ("GroceryInventoryFragment");
+    static final CharSequence SearchFragment = ("GrocerySearchFragment");
     /**
      * This class represents a tab to be displayed by {@link android.support.v4.view.ViewPager} and it's associated
      * {@link SlidingTabLayout}.
      */
-    static class SamplePagerItem {
+   public static class SamplePagerItem {
         private final CharSequence mTitle;
         private final int mIndicatorColor;
         private final int mDividerColor;
-        private final CharSequence mInstanceofFragment;
+        private  final CharSequence mInstanceofFragment;
 
         SamplePagerItem(CharSequence title, int indicatorColor, int dividerColor,CharSequence instanceofFragment) {
             mTitle = title;
@@ -35,18 +38,28 @@ public class GroceryMainFragment extends Fragment {
             mInstanceofFragment = instanceofFragment;
         }
 
+
         /**
          * @return A new {@link Fragment} to be displayed by a {@link android.support.v4.view.ViewPager}
          */
-        Fragment createFragment() {
-            return GrocerySearchFragment.newInstance();
-        }
+      public  Fragment createFragment() {
+
+
+          if (mInstanceofFragment.equals(CategoryFragment)) {
+              return GroceryCategoryFragment.newInstance();
+          }
+                else if(mInstanceofFragment.equals(InventoryFragment)){
+              return GroceryInventoryFragment.newInstance();
+              }
+                 else
+                  return    GrocerySearchFragment.newInstance();
+      }
 
         /**
          * @return the title which represents this tab. In this sample this is used directly by
          * {@link android.support.v4.view.PagerAdapter#getPageTitle(int)}
          */
-        CharSequence getTitle() {
+     public   CharSequence getTitle() {
 
             return mTitle;
         }
@@ -54,7 +67,7 @@ public class GroceryMainFragment extends Fragment {
          * @return the getInstanceofFragment which represents type of fragment to return. In this sample this is used directly by
          * {@link android.support.v4.view.PagerAdapter#getPageTitle(int)}
          */
-        CharSequence getInstanceofFragment() {
+     public   CharSequence getInstanceofFragment() {
 
             return  mInstanceofFragment;
         }
@@ -106,22 +119,30 @@ public class GroceryMainFragment extends Fragment {
                 getString(R.string.tab_fridge_pantry), // Title
                 Color.BLUE, // Indicator color
                 Color.GRAY ,// Divider color
-                "GrocerySearchFragment"
+                InventoryFragment
 
         ));
 
         mTabs.add(new SamplePagerItem(
                 getString(R.string.tab_grocery_shopping_list), // Title
                 Color.RED, // Indicator color
+                Color.GRAY,// Divider color
+                "ShoppingList"
+        ));
+
+
+        mTabs.add(new SamplePagerItem(
+                getString(R.string.tab_Categories), // Title
+                Color.YELLOW, // Indicator color
                 Color.GRAY ,// Divider color
-                "GrocerySearchFragment"
+                CategoryFragment
         ));
 
         mTabs.add(new SamplePagerItem(
                 getString(R.string.tab_search_grocery_shopping_list), // Title
-                Color.YELLOW, // Indicator color
+                Color.GREEN, // Indicator color
                 Color.GRAY ,// Divider color
-                "GrocerySearchFragment"
+                SearchFragment
         ));
         // END_INCLUDE (populate_tabs)
     }

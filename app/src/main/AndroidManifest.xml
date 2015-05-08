@@ -10,7 +10,6 @@
         <activity
             android:name=".GrocerySearchActivity"
             android:label="@string/title_activity_main" >
-
         </activity>
 
         <provider
@@ -30,13 +29,29 @@
         </activity>
         <activity
             android:name=".GroceryMainActivity"
+            android:theme="@style/GroceryTheme"
             android:label="@string/title_activity_grocery_main" >
-
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".GroceryInventoryActivity"
+            android:label="@string/title_activity_grocery_inventory" >
+        </activity>
+        <activity
+            android:name=".GroceryCategoryActivity"
+            android:label="@string/title_activity_grocery_category" >
+        </activity>
+        <activity
+            android:name=".GroceryAddCategoryActivity"
+            android:label="@string/title_activity_grocery_add_category"
+            android:parentActivityName=".GroceryCategoryActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.awebber.grocery.GroceryCategoryActivity" />
         </activity>
     </application>
 

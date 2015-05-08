@@ -38,9 +38,8 @@ public  class GroceryContract  {
     // looking at groceries data.
     public static final String PATH_GROCERIES = GroceryEntry.TABLE_NAME;// "groceries";
     public static final String PATH_BRANDS = BrandEntry.TABLE_NAME;// "brands";
-    public static final String PATH_BASIC_DESC = BasicDescriptionEntry.TABLE_NAME;//"basic_descriptions";
-
-
+    public static final String PATH_CATEGORIES = CategoryEntry.TABLE_NAME;//"categories";
+    public static final String PATH_INVENTORY =InventoryEntry.TABLE_NAME;//
     // Inner class that defines the table contents of the groceries table
     public static final class GroceryEntry implements BaseColumns {
 
@@ -55,13 +54,17 @@ public  class GroceryContract  {
         public static final String TABLE_NAME = "groceries";
 
         // Column with the foreign key into the basic_description table.
-        public static final String COLUMN_BASIC_DESC_LOC_KEY = "basic_description_id";
+        public static final String COLUMN_CATEGORY_LOC_KEY = "category_id";
 
         // Column with the foreign key into the brands table.
         public static final String COLUMN_BRAND_LOC_KEY = "brand_id";
 
+        // The name of the number
+        public static final String COLUMN_QUANTITY = "quantity";
+
         // The name of the product Coconut oil,Pure Sport,Procell
         public static final String COLUMN_PRODUCT_NAME = "product_name";
+
 
         //Build a uri with an id number @ the end used for queries with id
 
@@ -81,7 +84,7 @@ public  class GroceryContract  {
         //For queries use buildGroceriesBasicDescWBrand
         public static Uri buildGroceriesBasicDesc(String productDescription) {
             return CONTENT_URI.buildUpon().
-                    appendPath(PATH_BASIC_DESC).
+                    appendPath(PATH_CATEGORIES).
                     appendPath(productDescription).
                     build();
         }
@@ -129,23 +132,63 @@ public  class GroceryContract  {
     }
 
     //   Inner class that defines the table contents of the basic_descriptions table
-    public static final class BasicDescriptionEntry implements BaseColumns {
+    public static final class CategoryEntry implements BaseColumns {
            public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_BASIC_DESC).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CATEGORIES).build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BASIC_DESC;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CATEGORIES;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BASIC_DESC;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CATEGORIES;
 
-        public static final String TABLE_NAME = "basic_descriptions";
+        public static final String TABLE_NAME = "categories";
 
         //A basic description of what the items is e.g cookie ,cereal ,Fruit ,tortilla chip
         //name should be in singular form
-        public static final String COLUMN_PRODUCT_TYPE = "product_type";
+        public static final String COLUMN_CATEGORY_NAME = "category_name";
 
-        public static Uri buildBasicDescriptionsUri(long id) {
+        public static Uri buildCategoriesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+    public static final class InventoryEntry implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_GROCERIES).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GROCERIES;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GROCERIES;
+
+        public static final String TABLE_NAME = "inventory";
+
+        // Column with the foreign key into the basic_description table.
+        public static final String COLUMN_CATEGORY_LOC_KEY = "category_id";
+
+        // Column with the foreign key into the brands table.
+        public static final String COLUMN_BRAND_LOC_KEY = "brand_id";
+
+        // The name of the number
+        public static final String COLUMN_QUANTITY = "quantity";
+
+        // The name of the product Coconut oil,Pure Sport,Procell
+        public static final String COLUMN_PRODUCT_NAME = "product_name";
+
+        //Build a uri with an id number @ the end used for queries with id
+
+        //For queries use buildGroceriesBasicDescWBran
+        public static Uri buildInventoryUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+
+        public static String getBrandNameFromUri(Uri uri) {
+            return uri.getPathSegments().get(2);
+        }
+
+        public static String getBasicDescFromUri(Uri uri) {
+            return  uri.getPathSegments().get(2);
         }
     }
 

@@ -1,49 +1,28 @@
-/*
- * Title: MainActivity.java
- * Created by Alton Webber on
- * Description:
- *
- * Purpose:
- *
- *
- *
- * Usage:
- *
- *
- */
 package com.example.awebber.grocery;
 
 
+import android.app.Activity;
 
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class GrocerySearchActivity extends AppCompatActivity {
 
+public class GroceryAddCategoryActivity extends AppCompatActivity {
 
-    private final String GroceryFRAGMENT_TAG = "GFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_grocery_search);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new GrocerySearchFragment() ,GroceryFRAGMENT_TAG)
-                    .commit();
-        }
+        setContentView(R.layout.activity_grocery_add_category);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_grocery_add_category, menu);
         return true;
     }
 
@@ -61,10 +40,4 @@ public class GrocerySearchActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    @Override
-    protected void onResume() {
-          super.onResume();
-    }
-
 }

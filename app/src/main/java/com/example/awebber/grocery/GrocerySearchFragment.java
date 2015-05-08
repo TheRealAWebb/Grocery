@@ -1,4 +1,4 @@
-/*
+/**
  * Title: GroceryFragment.java
  * Created by Alton Webber on 4/20/15.
  * Description:
@@ -10,7 +10,7 @@
  * Usage:
  *
  *
- */
+ **/
 package com.example.awebber.grocery;
 
 import android.content.ContentUris;
@@ -37,6 +37,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.example.awebber.grocery.adapter.GroceryCursorAdapter;
 import com.example.awebber.grocery.data.GroceryContract;
 
 public class GrocerySearchFragment extends Fragment implements SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<Cursor>{
@@ -71,7 +72,7 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
         mContext =  getActivity();
-       addGrocery("Chicken");
+        addGrocery("Chicken");
     }
 
     @Override
@@ -79,12 +80,12 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
 
         mGroceryCursorAdapter = new GroceryCursorAdapter(getActivity(),null,0);
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_grocery_search, container, false);
         SearchView grocerySearch = ( SearchView) rootView.findViewById(R.id.search_products);
         grocerySearch.setOnQueryTextListener(this);
 
         ListView groceryListView = (ListView) rootView.findViewById(R.id.list_view_grocery);
-        View empty = rootView.findViewById(R.id.emptyListElem);
+        View empty = rootView.findViewById(R.id.emptyListElement);
         groceryListView.setEmptyView(empty);
         groceryListView.setAdapter(mGroceryCursorAdapter);
 
@@ -126,7 +127,9 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         String selection;
         Uri groceriesUri = GroceryContract.GroceryEntry.CONTENT_URI;
-        String[] projections = { "'" +GroceryContract.GroceryEntry.TABLE_NAME + "'" + " AS table_name"  ,GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, GroceryContract.GroceryEntry._ID };
+        String[] projections = { "'" +GroceryContract.GroceryEntry.TABLE_NAME + "'" + " AS table_name"  ,
+                GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, GroceryContract.GroceryEntry._ID };
+
           if(mCurFilter == null ){
             //A Value that will never be used
              selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%555%' ";
@@ -148,12 +151,12 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
                GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
                " like '" + mCurFilter + "%' " +
                 "UNION ALL" +
-                " SELECT " +  "'" + GroceryContract.BasicDescriptionEntry.TABLE_NAME + "'" + " AS table_name, "  +
-                GroceryContract.BasicDescriptionEntry.TABLE_NAME + "."+
-                   GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE+
-                ", _id FROM "+   GroceryContract.BasicDescriptionEntry.TABLE_NAME +
-                 " Where " +GroceryContract.BasicDescriptionEntry.TABLE_NAME + "."+
-                GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE+
+                " SELECT " +  "'" + GroceryContract.CategoryEntry.TABLE_NAME + "'" + " AS table_name, "  +
+                GroceryContract.CategoryEntry.TABLE_NAME + "."+
+                   GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
+                ", _id FROM "+   GroceryContract.CategoryEntry.TABLE_NAME +
+                 " Where " + GroceryContract.CategoryEntry.TABLE_NAME + "."+
+                GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
                 " like '%" + mCurFilter + "%' " ;
             Log.i(TAG, " " +projections[0]+ " " + projections[1] + selection);
 
@@ -202,7 +205,7 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
             // so the content provider knows what kind of value is being inserted.
             locationValues.put(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, product_name);
             locationValues.put(GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY,0);
-            locationValues.put(GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY,0);
+            locationValues.put(GroceryContract.GroceryEntry.COLUMN_CATEGORY_LOC_KEY,0);
             // Finally, insert location data into the database.
             Uri insertedUri = mContext.getContentResolver().insert(
                     GroceryContract.GroceryEntry.CONTENT_URI,
@@ -219,7 +222,7 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
     }
 
     /**
-     * @return a new instance of {@link com.example.awebber.grocery.GrocerySearchFragment}
+     * @return a new instance of {@link GrocerySearchFragment}
      */
     public static GrocerySearchFragment newInstance() {
         GrocerySearchFragment fragment = new GrocerySearchFragment();

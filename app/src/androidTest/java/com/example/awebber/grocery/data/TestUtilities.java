@@ -59,7 +59,7 @@ public class TestUtilities extends AndroidTestCase {
      */
     static ContentValues createGroceryValues(long BasicDescRowId,long brandRowId) {
         ContentValues GroceryValues = new ContentValues();
-        GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_BASIC_DESC_LOC_KEY ,BasicDescRowId);
+        GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_CATEGORY_LOC_KEY,BasicDescRowId);
         GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY,brandRowId );
         GroceryValues.put(GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, "Pure Sport");
 
@@ -76,7 +76,7 @@ public class TestUtilities extends AndroidTestCase {
     static ContentValues createSneakerBasicDescValues() {
         // Create a new map of values, where column names are the keys
         ContentValues testValues = new ContentValues();
-        testValues.put(GroceryContract.BasicDescriptionEntry.COLUMN_PRODUCT_TYPE, TEST_BASICS_DES );
+        testValues.put(GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME, TEST_BASICS_DES );
         return testValues;
     }
 
@@ -104,11 +104,11 @@ public class TestUtilities extends AndroidTestCase {
         ContentValues testValuesBasicDesc = TestUtilities.createSneakerBasicDescValues();
 
         long  BasicDescRowId;
-        BasicDescRowId = db.insert( GroceryContract.BasicDescriptionEntry.TABLE_NAME, null, testValuesBasicDesc );
+        BasicDescRowId = db.insert( GroceryContract.CategoryEntry.TABLE_NAME, null, testValuesBasicDesc );
 
         // Verify we got a row back.
 
-        assertTrue("Error: Failure to insert Sneaker BasicDesc Values into Table" + GroceryContract.BasicDescriptionEntry.TABLE_NAME , BasicDescRowId != -1);
+        assertTrue("Error: Failure to insert Sneaker BasicDesc Values into Table" + GroceryContract.CategoryEntry.TABLE_NAME , BasicDescRowId != -1);
 
         return BasicDescRowId;
     }

@@ -1,49 +1,35 @@
-/*
- * Title: MainActivity.java
- * Created by Alton Webber on
- * Description:
- *
- * Purpose:
- *
- *
- *
- * Usage:
- *
- *
- */
 package com.example.awebber.grocery;
 
 
-
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 
-public class GrocerySearchActivity extends AppCompatActivity {
+import com.example.awebber.grocery.R;
 
+public class GroceryInventoryActivity extends AppCompatActivity {
 
-    private final String GroceryFRAGMENT_TAG = "GFTAG";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_grocery_search);
-
+        setContentView(R.layout.activity_grocery_inventory);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new GrocerySearchFragment() ,GroceryFRAGMENT_TAG)
+                    .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_grocery_inventory, menu);
         return true;
     }
 
@@ -62,9 +48,19 @@ public class GrocerySearchActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-          super.onResume();
-    }
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlaceholderFragment extends Fragment {
 
+        public PlaceholderFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_grocery_inventory, container, false);
+            return rootView;
+        }
+    }
 }
