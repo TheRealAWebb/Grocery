@@ -155,7 +155,7 @@ public  class GroceryContract  {
     public static final class InventoryEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_GROCERIES).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_INVENTORY).build();
 
         public static final String CONTENT_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_GROCERIES;
@@ -165,18 +165,12 @@ public  class GroceryContract  {
         public static final String TABLE_NAME = "inventory";
 
         // Column with the foreign key into the basic_description table.
-        public static final String COLUMN_CATEGORY_LOC_KEY = "category_id";
+        public static final String COLUMN_GROCERY_LOC_KEY = "grocery_id";
 
-        // Column with the foreign key into the brands table.
-        public static final String COLUMN_BRAND_LOC_KEY = "brand_id";
-
-        // The name of the number
+        // The amound of the product that exist
         public static final String COLUMN_QUANTITY = "quantity";
 
-        // The name of the product Coconut oil,Pure Sport,Procell
-        public static final String COLUMN_PRODUCT_NAME = "product_name";
 
-        //Build a uri with an id number @ the end used for queries with id
 
         //For queries use buildGroceriesBasicDescWBran
         public static Uri buildInventoryUri(long id) {

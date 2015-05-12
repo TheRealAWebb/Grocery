@@ -6,14 +6,17 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
@@ -28,6 +31,7 @@ e
  */
 public class GroceryCategoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String TAG ="GroceryCategoryFragment";
+    public static final int ADD_CATEGORY_REQUEST = 2;
     private static Context mContext ;
     private static final int CATEGORY_LOADER = 0;
     //CursorAdapter mGroceryCursorAdapter;
@@ -59,18 +63,42 @@ public class GroceryCategoryFragment extends Fragment implements LoaderManager.L
         groceryListView.setEmptyView(empty);
         groceryListView.setAdapter(mGroceryCursorAdapter);
 
-
+        getLoaderManager().restartLoader(CATEGORY_LOADER, null, this);
         ImageButton cateogryadd = (ImageButton) rootView.findViewById(R.id.add_category);
+
+        groceryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                //   if it cannot seek to that position.
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+                if (cursor != null) {
+                   // Log.e(TAG, "Column Value : " + cursor.getString(0));
+                    Intent intent = new Intent(getActivity(), GroceryCateogoryTabs.class);
+                    intent.putExtra("Position", position);
+                    intent.putExtra("ColumnCategory", cursor.getString(0));
+                    startActivity(intent);
+                }
+            }
+        });
+
+
+
+
+
         cateogryadd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), GroceryAddCategoryActivity.class);
 
-                startActivity(intent);
+                Intent intent = new Intent(getActivity(), GroceryAddCategoryActivity.class);
+               startActivityForResult(intent,ADD_CATEGORY_REQUEST);
             }
         });
         // Inflate the layout for this fragment
         return rootView;
     }
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -85,6 +113,7 @@ public class GroceryCategoryFragment extends Fragment implements LoaderManager.L
         Uri groceriesUri = GroceryContract.CategoryEntry.CONTENT_URI;
         //Selection is the Where clause
         String selection = null ;
+        String sortOrder = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +" COLLATE NOCASE";
         String[] projections =  {GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME, GroceryContract.CategoryEntry._ID};
 
         return new CursorLoader(getActivity(),
@@ -92,7 +121,7 @@ public class GroceryCategoryFragment extends Fragment implements LoaderManager.L
                 projections,
                 selection,
                 null,
-                null);
+                sortOrder);
 
     }
 

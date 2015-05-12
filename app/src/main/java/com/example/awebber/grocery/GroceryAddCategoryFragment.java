@@ -33,6 +33,7 @@ public class GroceryAddCategoryFragment extends Fragment  {
     // final   View popupView = inflater.inflate(R.layout.popup_empty_category, null);
 
       final  EditText editText = (EditText) rootView.findViewById(R.id.add_category_edit_text);
+
         ImageButton cateogryConfirm = (ImageButton) rootView.findViewById(R.id.confirm_category);
         cateogryConfirm.setOnClickListener(new View.OnClickListener() {
 
@@ -40,12 +41,13 @@ public class GroceryAddCategoryFragment extends Fragment  {
                 String selection = GroceryContract.CategoryEntry.TABLE_NAME +
                         "." + GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME + " = ? ";
                 String[] projections =  {GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME, GroceryContract.CategoryEntry._ID};
-                String[] selectionArgs ={editText.getText().toString()};
+                String editTextInput =editText.getText().toString();
+                String[] selectionArgs ={editTextInput};
                Cursor checkifexist = getActivity().getContentResolver().query(GroceryContract.CategoryEntry.CONTENT_URI,projections,selection,selectionArgs ,null);
 
-                if (editText.getText().toString().isEmpty() ){
+                if (editTextInput.isEmpty() ){
                     Log.i(TAG, " The Category Is Blank");
-                checkifexist.close();
+                          checkifexist.close();
                 }
                 else  if (checkifexist.moveToFirst()){
                     Log.i(TAG," The Category  Already Exist");
@@ -53,7 +55,8 @@ public class GroceryAddCategoryFragment extends Fragment  {
                 }
                     else   {
                     ContentValues newCategory = new ContentValues();
-                    newCategory.put(GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME, editText.getText().toString());
+
+                    newCategory.put(GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME,editTextInput);
                     getActivity().getContentResolver().insert(GroceryContract.CategoryEntry.CONTENT_URI, newCategory);
                     checkifexist.close();
                     getActivity().finish();

@@ -53,7 +53,7 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
                      ") ON CONFLICT ABORT);";
 
 
-        final String SQL_CREATE_Basic_Description_TABLE ="CREATE TABLE "+
+        final String SQL_CREATE_CATEGORY_TABLE ="CREATE TABLE "+
                 CategoryEntry.TABLE_NAME + " (" +
                 GroceryContract.CategoryEntry._ID + " INTEGER PRIMARY KEY," +
                 CategoryEntry.COLUMN_CATEGORY_NAME + " TEXT NOT NULL, " +
@@ -79,8 +79,8 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
                 " FOREIGN KEY (" + GroceryEntry.COLUMN_BRAND_LOC_KEY + ") REFERENCES " +
                 BrandEntry.TABLE_NAME + " (" + BrandEntry._ID + "), " +
 
-                // To assure the application have just one weather entry per day
-                // per location, it's created a UNIQUE constraint with REPLACE strategy
+                // To assure the application have  entry
+                // ,  created a UNIQUE constraint with REPLACE strategy
                 " UNIQUE (" + GroceryEntry.COLUMN_PRODUCT_NAME + ", " +
                 GroceryEntry.COLUMN_CATEGORY_LOC_KEY + ", " +
                 GroceryEntry.COLUMN_BRAND_LOC_KEY + ") ON CONFLICT REPLACE);";
@@ -88,33 +88,24 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         final String SQL_CREATE_INVENTORY_TABLE = "CREATE TABLE " +
                 GroceryContract.InventoryEntry.TABLE_NAME + " (" +
                 InventoryEntry._ID + " INTEGER PRIMARY KEY, " +
-                InventoryEntry.COLUMN_CATEGORY_LOC_KEY + " INTEGER, " +
-                InventoryEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
-                InventoryEntry.COLUMN_BRAND_LOC_KEY  + " INTEGER, " +
-                InventoryEntry.COLUMN_QUANTITY       + " INTEGER, " +
+                InventoryEntry.COLUMN_GROCERY_LOC_KEY + " INTEGER, " +
+                InventoryEntry.COLUMN_QUANTITY        + " INTEGER, " +
 
-                // Set up the basic_description column as a foreign key to basic_description table.
-                " FOREIGN KEY " +"(" + InventoryEntry.COLUMN_CATEGORY_LOC_KEY + ")" +
+                // Set up the grocery._id column as a foreign key to grocery._ID table.
+                " FOREIGN KEY " +"(" + InventoryEntry.COLUMN_GROCERY_LOC_KEY + ")" +
                 " REFERENCES " +
-                GroceryContract.CategoryEntry.TABLE_NAME + " (" + CategoryEntry._ID + "), " +
+                GroceryContract.GroceryEntry.TABLE_NAME + " (" + GroceryEntry._ID + "), " +
 
-                // Set up the brand column as a foreign key to brands table.
-                " FOREIGN KEY (" + InventoryEntry.COLUMN_BRAND_LOC_KEY + ") REFERENCES " +
-                BrandEntry.TABLE_NAME + " (" + BrandEntry._ID + "), " +
-
-                // To assure the application have just one weather entry per day
-                // per location, it's created a UNIQUE constraint with REPLACE strategy
-                " UNIQUE (" + InventoryEntry.COLUMN_PRODUCT_NAME + ", " +
-                InventoryEntry.COLUMN_CATEGORY_LOC_KEY + ", " +
-                InventoryEntry.COLUMN_BRAND_LOC_KEY + ") ON CONFLICT REPLACE);";
+                // To assure the application have just one Instance of a product in inventory
+                " UNIQUE (" +InventoryEntry.COLUMN_GROCERY_LOC_KEY +") ON CONFLICT ABORT);";
 
 
 
         sqLiteDatabase.execSQL(SQL_CREATE_BRANDS_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_Basic_Description_TABLE);
-        sqLiteDatabase.execSQL(SQL_CREATE_INVENTORY_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_CATEGORY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_GROCERIES_TABLE);
-        Log.i(TAG,"This is the helper");
+        sqLiteDatabase.execSQL(SQL_CREATE_INVENTORY_TABLE);
+        Log.i(TAG,SQL_CREATE_INVENTORY_TABLE);
 
         Utility utility = new Utility();
         List<String> brands =   utility.LoadTextFile( mContext, R.raw.brandslist);
@@ -123,7 +114,6 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         for (String brand : brands)
         {
             ContentValues brandValues = new ContentValues();
-            Log.i(TAG, brand);
             brandValues.put(BrandEntry.COLUMN_PRODUCT_BRAND_NAME, brand);
             sqLiteDatabase.insert(BrandEntry.TABLE_NAME,null,brandValues);
         }
@@ -132,14 +122,12 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         for (String category : categories)
         {
             ContentValues categoryValues = new ContentValues();
-            Log.i(TAG,  category );
             categoryValues.put(CategoryEntry.COLUMN_CATEGORY_NAME, category);
             sqLiteDatabase.insert(CategoryEntry.TABLE_NAME,null, categoryValues);
         }
         for (String grocery :  groceries )
         {
             ContentValues  groceryValues = new ContentValues();
-            Log.i(TAG, grocery);
             groceryValues.put(GroceryEntry.COLUMN_PRODUCT_NAME, grocery);
             sqLiteDatabase.insert(GroceryEntry.TABLE_NAME,null, groceryValues);
         }
@@ -159,7 +147,8 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
             // should be your top priority before modifying this method.
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GroceryEntry.TABLE_NAME);
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + BrandEntry.TABLE_NAME);
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + GroceryContract.CategoryEntry.TABLE_NAME);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CategoryEntry.TABLE_NAME);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + InventoryEntry.TABLE_NAME);
             onCreate(sqLiteDatabase);
         }
 

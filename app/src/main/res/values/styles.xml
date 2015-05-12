@@ -1,21 +1,13 @@
 <resources>
-
-
-
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-
+    <style
+        name="MyActionBar"
+        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
     </style>
 
-
-
-
-
-        <!-- main activity action bar styles -->
+    <!-- main activity action bar styles -->
         <style name="ActionBar.Solid.Grocery.NoTitle"
             parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
             <item name="displayOptions">useLogo|showHome</item>
-            <item name="logo">@drawable/awebber</item>
-
         </style>
 
 

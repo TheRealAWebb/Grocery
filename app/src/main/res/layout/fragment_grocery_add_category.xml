@@ -15,6 +15,7 @@
         android:id="@+id/add_category_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textCapSentences"
         android:hint="@string/category_hint"/>
 
     <ImageButton

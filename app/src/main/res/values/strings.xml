@@ -35,4 +35,5 @@
     <string name="title_activity_grocery_inventory">GroceryInventory</string>
     <string name="title_activity_grocery_category">GroceryCategoryActivity</string>
     <string name="title_activity_grocery_add_category">GroceryAddCategory</string>
+    <string name="title_activity_grocery_cateogory_tabs">GroceryCateogoryTabs</string>
 </resources>

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class GroceryMainFragment extends Fragment {
               return GroceryInventoryFragment.newInstance();
               }
                  else
-                  return    GrocerySearchFragment.newInstance();
+                  return    GrocerySearchFragment.newInstance(getTitle().toString());
       }
 
         /**
@@ -109,7 +110,6 @@ public class GroceryMainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // BEGIN_INCLUDE (populate_tabs)
         /**
          * Populate our tab list with tabs. Each item contains a title, indicator color and divider
@@ -151,17 +151,20 @@ public class GroceryMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         // The last two arguments ensure LayoutParams are inflated
         // properly.
-
-        return inflater.inflate(R.layout.fragment_grocery_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_grocery_main, container, false);
+        Toolbar toolbar = (Toolbar)rootView.findViewById(R.id.my_awesome_toolbar);
+        toolbar.setLogo(R.drawable.awebber);
+        return rootView;
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
         // BEGIN_INCLUDE (setup_viewpager)
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mViewPager.setAdapter(new GroceryPagerAdapter(getChildFragmentManager(),mTabs));
         // END_INCLUDE (setup_viewpager)
-
+        mViewPager.setCurrentItem(3);
         // BEGIN_INCLUDE (setup_slidingtablayout)
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.

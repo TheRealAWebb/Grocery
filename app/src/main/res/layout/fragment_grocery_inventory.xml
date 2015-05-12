@@ -1,13 +1,46 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#0d47a1"
     tools:context="com.example.awebber.grocery.GroceryInventoryActivity$PlaceholderFragment">
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
 
-    <TextView android:text="@string/hello_world"
+    <Button android:id="@+id/btn_barcode_scan"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="36dp"
+        android:minWidth="88dp"
 
-</RelativeLayout>
+            />
+    <Button android:id="@+id/add_to_inventoru"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:minWidth="88dp"
+
+        />
+    </LinearLayout>
+    <!-- Input Barcode -->
+    <ListView
+       android:id ="@+id/list_view_inventory"
+        android:layout_width="match_parent"
+        android:background="?attr/colorPrimary"
+        android:layout_height="match_parent">
+
+    </ListView>
+    <!-- view to be shown/hidden on empty list above -->
+    <TextView
+        android:id="@+id/emptyListElem"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="@string/empty_List_Elem_text" />
+</LinearLayout>

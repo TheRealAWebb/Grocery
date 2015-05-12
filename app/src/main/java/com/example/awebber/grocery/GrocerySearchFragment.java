@@ -52,6 +52,10 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
     public GrocerySearchFragment() {
             }
 
+
+
+
+
    // implemention of SearchView.OnQueryTextListener
     public boolean onQueryTextChange(String newText) {
         // Called when the action bar search text has changed.  Update
@@ -72,6 +76,8 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
         mContext =  getActivity();
+
+        //intent.putExtra("Position", position);
         addGrocery("Chicken");
     }
 
@@ -125,50 +131,70 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        String selection;
-        Uri groceriesUri = GroceryContract.GroceryEntry.CONTENT_URI;
-        String[] projections = { "'" +GroceryContract.GroceryEntry.TABLE_NAME + "'" + " AS table_name"  ,
-                GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME, GroceryContract.GroceryEntry._ID };
-
-          if(mCurFilter == null ){
-            //A Value that will never be used
-             selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%555%' ";
-
-         }
-        else {
-         //Search  brands.brand_name ,basic_descriptions.product_type, groceries.product_name
-         //For a statment that matches the selection
-           //A query that searches all tables for the information
-           selection = GroceryContract.GroceryEntry.TABLE_NAME + "."+
-                GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +
-                " like '%" + mCurFilter + "%' " +
-                "UNION ALL" +
-                " SELECT " +"'" +GroceryContract.BrandEntry.TABLE_NAME + "'" + " AS table_name, "  +
-              GroceryContract.BrandEntry.TABLE_NAME + "."+
-                GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
-               ", _id FROM "+   GroceryContract.BrandEntry.TABLE_NAME+
-               " WHERE "+ GroceryContract.BrandEntry.TABLE_NAME + "."+
-               GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
-               " like '" + mCurFilter + "%' " +
-                "UNION ALL" +
-                " SELECT " +  "'" + GroceryContract.CategoryEntry.TABLE_NAME + "'" + " AS table_name, "  +
-                GroceryContract.CategoryEntry.TABLE_NAME + "."+
-                   GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
-                ", _id FROM "+   GroceryContract.CategoryEntry.TABLE_NAME +
-                 " Where " + GroceryContract.CategoryEntry.TABLE_NAME + "."+
-                GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
-                " like '%" + mCurFilter + "%' " ;
-            Log.i(TAG, " " +projections[0]+ " " + projections[1] + selection);
-
-       // selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%" + mCurFilter + "%'" ;
+        String sortOrder = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
+        String selection = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME;
+        Uri groceriesUri ;
+        String[] projections = new String[3];
+        String[] selectionArgs = new String[1];
+        if ( !getArguments().getString("theCategory").equals("GrocerySearchFragment"))
+        {
+            projections[0] = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME;
+            projections[1] = GroceryContract.CategoryEntry._ID;
+            projections[2] =null;
+            groceriesUri = GroceryContract.CategoryEntry.CONTENT_URI;
+            selection = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME;
+            Log.i(TAG, getArguments().getString("theCategory"));
+            selectionArgs[0] = getArguments().getString("theCategory");
+            sortOrder = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +" COLLATE NOCASE";
         }
+         else {
 
+             sortOrder = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
+             selectionArgs = null;
+             groceriesUri = GroceryContract.GroceryEntry.CONTENT_URI;
+             projections[0] = "'" + GroceryContract.GroceryEntry.TABLE_NAME + "'" + " AS table_name";
+             projections[1] = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
+             projections[2] = GroceryContract.GroceryEntry._ID;
+
+
+            if (mCurFilter == null) {
+                //A Value that will never be used
+                selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%555%' ";
+
+            } else {
+                //Search  brands.brand_name ,basic_descriptions.product_type, groceries.product_name
+                //For a statment that matches the selection
+                //A query that searches all tables for the information
+                selection = GroceryContract.GroceryEntry.TABLE_NAME + "." +
+                        GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +
+                        " like '%" + mCurFilter + "%' " +
+                        "UNION ALL" +
+                        " SELECT " + "'" + GroceryContract.BrandEntry.TABLE_NAME + "'" + " AS table_name, " +
+                        GroceryContract.BrandEntry.TABLE_NAME + "." +
+                        GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
+                        ", _id FROM " + GroceryContract.BrandEntry.TABLE_NAME +
+                        " WHERE " + GroceryContract.BrandEntry.TABLE_NAME + "." +
+                        GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
+                        " like '" + mCurFilter + "%' " +
+                        "UNION ALL" +
+                        " SELECT " + "'" + GroceryContract.CategoryEntry.TABLE_NAME + "'" + " AS table_name, " +
+                        GroceryContract.CategoryEntry.TABLE_NAME + "." +
+                        GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
+                        ", _id FROM " + GroceryContract.CategoryEntry.TABLE_NAME +
+                        " Where " + GroceryContract.CategoryEntry.TABLE_NAME + "." +
+                        GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
+                        " like '%" + mCurFilter + "%' ";
+                Log.i(TAG, " " + projections[0] + " " + projections[1] + selection);
+
+                // selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%" + mCurFilter + "%'" ;
+            }
+        }
         return new CursorLoader(getActivity(),
                 groceriesUri,
                 projections,
                 selection,
                 null,
-                null);
+                sortOrder);
 
     }
 
@@ -223,9 +249,17 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
 
     /**
      * @return a new instance of {@link GrocerySearchFragment}
-     */
-    public static GrocerySearchFragment newInstance() {
+     *String theCategory allows the Category to be passed for the query
+     *
+     **/
+    public static GrocerySearchFragment newInstance(String theCategory) {
         GrocerySearchFragment fragment = new GrocerySearchFragment();
+
+
+        Bundle args = new Bundle();
+        args.putString("theCategory", theCategory);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
