@@ -84,20 +84,13 @@ public class Utility {
     return theList;
     }
 
-
-
-
-    //Desgin FOR "http://www.upcdatabase.org/
+      //Desgin FOR "http://www.upcdatabase.org/
 
     public static void xmlParse (XmlPullParser xpp) throws XmlPullParserException, IOException
     {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
-      //  XmlPullParser xpp = Xml;
 
-
-       // xpp.setInput( new StringReader( "<foo>Hello World!</foo>" ) );
-     //  Boolean taketext =false;
         int eventType = xpp.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if(eventType == XmlPullParser.START_DOCUMENT) {
@@ -110,12 +103,6 @@ public class Utility {
                 System.out.println("Text "+xpp.getText());
             }
             eventType = xpp.next();
-
-
-
-
-
-
         }
         System.out.println("End document");
     }

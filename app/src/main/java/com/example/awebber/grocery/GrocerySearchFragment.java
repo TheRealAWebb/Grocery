@@ -44,7 +44,7 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
     public static final String TAG ="GrocerySearchFragment";
     private static Context mContext ;
 
-    // If non-null, this is the current filter the user has provided.
+     // If non-null, this is the current filter the user has provided.
     String mCurFilter;
     private static final int GROCERY_LOADER = 0;
 
@@ -76,10 +76,7 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
         mContext =  getActivity();
-
-        //intent.putExtra("Position", position);
-        addGrocery("Chicken");
-    }
+       }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,7 +104,8 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
             // if it cannot seek to that position.
             Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
             if (cursor != null) {
-                Log.e( TAG, "Column Value : "+ cursor.getString(0) +" Column name :"+ cursor.getColumnName(0));
+                Log.e( TAG, "Column Value : "+ cursor.getString(0) +
+                        " Column name :"+ cursor.getColumnName(0));
                   Intent intent = new Intent(getActivity(), GroceryDetailActivity.class);
                     intent.putExtra("Table",cursor.getString(0));
                     intent.putExtra("Value",cursor.getString(1));
@@ -131,68 +129,39 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
-        String sortOrder = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
-        String selection = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME;
-        Uri groceriesUri ;
-        String[] projections = new String[3];
-        String[] selectionArgs = new String[1];
-        if ( !getArguments().getString("theCategory").equals("GrocerySearchFragment"))
-        {
-            projections[0] = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME;
-            projections[1] = GroceryContract.CategoryEntry._ID;
-            projections[2] =null;
-            groceriesUri = GroceryContract.CategoryEntry.CONTENT_URI;
-            selection = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME;
-            Log.i(TAG, getArguments().getString("theCategory"));
-            selectionArgs[0] = getArguments().getString("theCategory");
-            sortOrder = GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +" COLLATE NOCASE";
-        }
-         else {
 
-             sortOrder = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
-             selectionArgs = null;
-             groceriesUri = GroceryContract.GroceryEntry.CONTENT_URI;
+
+        String sortOrder;
+
+        Uri groceriesUri;
+        String[] projections = new String[3];
+        if (getArguments().getBoolean("isCategory"))
+        {
+            Log.i(TAG, " This is the Category" + getArguments().getString("theCategory"));
+            groceriesUri = GroceryContract.GroceryEntry.
+                    buildGroceriesCategory(getArguments().getString("theCategory"));
+            projections[0] = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
+            projections[1] = GroceryContract.GroceryEntry.TABLE_NAME +"."+ GroceryContract.CategoryEntry._ID;
+            projections[2] =null;
+            sortOrder = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +" COLLATE NOCASE";
+          }
+         else {
+             sortOrder =null;
              projections[0] = "'" + GroceryContract.GroceryEntry.TABLE_NAME + "'" + " AS table_name";
              projections[1] = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME;
              projections[2] = GroceryContract.GroceryEntry._ID;
-
-
             if (mCurFilter == null) {
                 //A Value that will never be used
-                selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%555%' ";
-
+                groceriesUri =  GroceryContract.GroceryEntry.buildCategoryWBrand("-1x208");
             } else {
-                //Search  brands.brand_name ,basic_descriptions.product_type, groceries.product_name
-                //For a statment that matches the selection
-                //A query that searches all tables for the information
-                selection = GroceryContract.GroceryEntry.TABLE_NAME + "." +
-                        GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +
-                        " like '%" + mCurFilter + "%' " +
-                        "UNION ALL" +
-                        " SELECT " + "'" + GroceryContract.BrandEntry.TABLE_NAME + "'" + " AS table_name, " +
-                        GroceryContract.BrandEntry.TABLE_NAME + "." +
-                        GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
-                        ", _id FROM " + GroceryContract.BrandEntry.TABLE_NAME +
-                        " WHERE " + GroceryContract.BrandEntry.TABLE_NAME + "." +
-                        GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
-                        " like '" + mCurFilter + "%' " +
-                        "UNION ALL" +
-                        " SELECT " + "'" + GroceryContract.CategoryEntry.TABLE_NAME + "'" + " AS table_name, " +
-                        GroceryContract.CategoryEntry.TABLE_NAME + "." +
-                        GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
-                        ", _id FROM " + GroceryContract.CategoryEntry.TABLE_NAME +
-                        " Where " + GroceryContract.CategoryEntry.TABLE_NAME + "." +
-                        GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
-                        " like '%" + mCurFilter + "%' ";
-                Log.i(TAG, " " + projections[0] + " " + projections[1] + selection);
-
-                // selection = GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME + " like '%" + mCurFilter + "%'" ;
+                groceriesUri = GroceryContract.GroceryEntry.buildCategoryWBrand(mCurFilter);
+                Log.i(TAG, "This is the Search Find " + projections[0] + " " + projections[1]);
             }
         }
         return new CursorLoader(getActivity(),
                 groceriesUri,
                 projections,
-                selection,
+                null,
                 null,
                 sortOrder);
 
@@ -250,14 +219,16 @@ public class GrocerySearchFragment extends Fragment implements SearchView.OnQuer
     /**
      * @return a new instance of {@link GrocerySearchFragment}
      *String theCategory allows the Category to be passed for the query
-     *
+     *USED in  {@link GroceryMainFragment} CreateFragment Method
      **/
-    public static GrocerySearchFragment newInstance(String theCategory) {
+    public static GrocerySearchFragment newInstance(boolean isCategory,CharSequence theCategory) {
         GrocerySearchFragment fragment = new GrocerySearchFragment();
 
 
         Bundle args = new Bundle();
-        args.putString("theCategory", theCategory);
+
+        args.putBoolean("isCategory", isCategory);
+        args.putCharSequence("theCategory", theCategory);
         fragment.setArguments(args);
 
         return fragment;

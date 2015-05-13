@@ -1,104 +1,5 @@
 Vegetables
-Amaranth
-Anaheim Peppers
-Arugula
-Asparagus
-Baby Carrots
-Baking Potatoes
-Basil
-Beetroot
-Black-eyed Peas
-Broocoli
-Cabbage
-Carrots
-Cauliflower
-Celery
-Chard
-Chickpeas
-Chicory Green
-Chicory Purple
-Chives
-Cilantro
-Collard Greens
-Coriander
-Corn
-Cucumber
-Dandelion
-Drumstick
-Edamame Soy
-Beans
-Eggplant
-Fava Beans
-Fennel
-Garlic
-Gherkin
-Ginger
-Green Beans
-Green Peas
-Groundnut
-Guar
-Kale
-Kidney Beans
-Kirby
-Leek
-Lettuce
-Lettuce Boston
-Lettuce Romaine
-Lotus root
-Mint Leaf
-Mushrooms
-Okra
-Onions
-Onions Pearl
-Onions Red
-Onions Scallions
-Onions Sweet
-Onions Yellow
-Orange Habanero Pepper
-Oyster Mushrooms
-Parsley
-Parsnips
-Parwal
-Peppers
-Peppers Bell
-Peppers Bell Green
-Peppers Bell Yellow
-Peppers Chili
-Peppers Jalapeno
-Plantain Banana
-Poblano Peppers
-Portobello Mushrooms
-Potatoes
-Potatoes Bagged
-Pumpkin
-Purple Cauliflower
-Radish
-Red Cabbage
-Sade Leaf
-Savoy Cabbage
-Serrano Peppers
-Shiitake mushrooms
-Snake Giurd
-Snow Peas
-Soybeans
-Spinach
-Spring Onions
-Squash Sweet Potatoes
-Swiss Chard
-Thyme
-Tomatoes
-Tomatoes Beefsteak
-Tomatoes Cherry
-Tomatoes On the Vine
-Tomatoes Plum
-Tomatoes Roma
-Turnip
-Wasabi
-Water Chestnut
-Watercress White/Button Mushrooms
-Yam
-Yellow Beans (Wax Beans)
-Zucchini
+
 
 Fruit
 Acai
@@ -411,39 +312,27 @@ Frozen Onion Rings
 Frozen Onion Rings
 Frozen Pancakes
 
-
 Beverages
-
 
 Bread & Bakery
 
-
 Baking Needs
-
 
 Canned Goods
 
-
 Sauces,Spices & Condiments
-
 
 Snacks,Chips & Candies
 
-
 Oil, Vinegar & Salad Dressing
-
 
 Soups, Grains & Rice
 
-
 Pasta & Noodles
-
 
 Household & Cleaning Supplies
 
-
 Infant & Childcare
-
 
 Health & beauty
 
@@ -455,6 +344,5 @@ Office & School Supplies
 
 
 Wine & Spirits
-
 
 International

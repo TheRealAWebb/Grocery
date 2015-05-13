@@ -109,7 +109,7 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
 
         Utility utility = new Utility();
         List<String> brands =   utility.LoadTextFile( mContext, R.raw.brandslist);
-        List<String> groceries =   utility.LoadTextFile( mContext, R.raw.grocerieslist);
+        List<String> groceries =   utility.LoadTextFile( mContext, R.raw.vegetables);
         List<String> categories =   utility.LoadTextFile( mContext, R.raw.categories);
         for (String brand : brands)
         {
@@ -129,6 +129,9 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         {
             ContentValues  groceryValues = new ContentValues();
             groceryValues.put(GroceryEntry.COLUMN_PRODUCT_NAME, grocery);
+            Log.i(TAG, " INsert " + grocery);
+            groceryValues.put(GroceryEntry.COLUMN_CATEGORY_LOC_KEY, 1);
+            Log.i(TAG, " INsert  " + "0");
             sqLiteDatabase.insert(GroceryEntry.TABLE_NAME,null, groceryValues);
         }
 

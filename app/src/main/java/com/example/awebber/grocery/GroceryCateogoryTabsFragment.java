@@ -22,7 +22,7 @@ import com.example.awebber.grocery.view.SlidingTabLayout;
  */
 public class GroceryCateogoryTabsFragment extends Fragment {
     public static final String TAG =" GroceryCateogoryTabsFragment";
-
+    static final CharSequence SearchFragment = ("GrocerySearchFragment");
     public GroceryCateogoryTabsFragment() {
     }
 
@@ -56,21 +56,22 @@ public class GroceryCateogoryTabsFragment extends Fragment {
         Cursor categories =  getActivity().getContentResolver().
                 query(CategoryEntry.CONTENT_URI, projection, selection, selectionArgs, sortOrder );
 
-      while(categories.moveToNext())
-      {
-          mTabs.add(new SamplePagerItem(
-                  categories.getString(categories.getColumnIndex(CategoryEntry.COLUMN_CATEGORY_NAME)), // Title
-                  Color.BLUE, // Indicator color
-                  Color.GRAY,// Divider color
-                  categories.getString(categories.getColumnIndex(CategoryEntry.COLUMN_CATEGORY_NAME))
 
-          ));
+           while (categories.moveToNext()) {
+               mTabs.add(new SamplePagerItem(
+                       categories.getString(categories.getColumnIndex(CategoryEntry.COLUMN_CATEGORY_NAME)), // Title
+                       Color.BLUE, // Indicator color
+                       Color.GRAY,// Divider color
+                       SearchFragment,
+                       true
 
+               ));
+           }
 
-
-      }
         categories.close();
-    }
+       }
+
+
 
 
 

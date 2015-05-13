@@ -31,12 +31,14 @@ public class GroceryMainFragment extends Fragment {
         private final int mIndicatorColor;
         private final int mDividerColor;
         private  final CharSequence mInstanceofFragment;
-
-        SamplePagerItem(CharSequence title, int indicatorColor, int dividerColor,CharSequence instanceofFragment) {
+        private boolean misCategory = false;
+        SamplePagerItem(CharSequence title, int indicatorColor, int dividerColor,
+                        CharSequence instanceofFragment,boolean isCategory) {
             mTitle = title;
             mIndicatorColor = indicatorColor;
             mDividerColor = dividerColor;
             mInstanceofFragment = instanceofFragment;
+            misCategory = isCategory;
         }
 
 
@@ -53,7 +55,7 @@ public class GroceryMainFragment extends Fragment {
               return GroceryInventoryFragment.newInstance();
               }
                  else
-                  return    GrocerySearchFragment.newInstance(getTitle().toString());
+                  return    GrocerySearchFragment.newInstance(getisCategory(),getTitle());
       }
 
         /**
@@ -73,9 +75,6 @@ public class GroceryMainFragment extends Fragment {
             return  mInstanceofFragment;
         }
 
-
-
-
         /**
          * @return the color to be used for indicator on the {@link SlidingTabLayout}
          */
@@ -90,6 +89,13 @@ public class GroceryMainFragment extends Fragment {
 
             return mDividerColor;
         }
+        /**
+         * @return the boolean in SearchFragment used to query List{@link  GrocerySearchFragment}
+         */
+        boolean getisCategory(){
+            return  misCategory;
+        }
+
     }
 
    /** A custom {@link ViewPager
@@ -119,7 +125,8 @@ public class GroceryMainFragment extends Fragment {
                 getString(R.string.tab_fridge_pantry), // Title
                 Color.BLUE, // Indicator color
                 Color.GRAY ,// Divider color
-                InventoryFragment
+                InventoryFragment,
+                false
 
         ));
 
@@ -127,7 +134,8 @@ public class GroceryMainFragment extends Fragment {
                 getString(R.string.tab_grocery_shopping_list), // Title
                 Color.RED, // Indicator color
                 Color.GRAY,// Divider color
-                "ShoppingList"
+                "ShoppingList",
+                false
         ));
 
 
@@ -135,14 +143,16 @@ public class GroceryMainFragment extends Fragment {
                 getString(R.string.tab_Categories), // Title
                 Color.YELLOW, // Indicator color
                 Color.GRAY ,// Divider color
-                CategoryFragment
+                CategoryFragment,
+                false
         ));
 
         mTabs.add(new SamplePagerItem(
                 getString(R.string.tab_search_grocery_shopping_list), // Title
                 Color.GREEN, // Indicator color
                 Color.GRAY ,// Divider color
-                SearchFragment
+                SearchFragment,
+                false
         ));
         // END_INCLUDE (populate_tabs)
     }
@@ -164,7 +174,7 @@ public class GroceryMainFragment extends Fragment {
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mViewPager.setAdapter(new GroceryPagerAdapter(getChildFragmentManager(),mTabs));
         // END_INCLUDE (setup_viewpager)
-        mViewPager.setCurrentItem(3);
+        mViewPager.setCurrentItem(3);//TODO Remove after debugging
         // BEGIN_INCLUDE (setup_slidingtablayout)
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
