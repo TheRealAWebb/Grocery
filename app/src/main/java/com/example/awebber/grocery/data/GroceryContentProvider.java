@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 public class GroceryContentProvider extends ContentProvider {
     public GroceryContentProvider() {
@@ -46,7 +47,7 @@ String TAG ="Content Provider";
     //This defines the "From" statemeny of the Query
     private static final SQLiteQueryBuilder sGroceryByBrandorCategoryQueryBuilder;
     private static final SQLiteQueryBuilder sGroceryByBrandQueryBuilder;
-    private static final SQLiteQueryBuilder sGroceryByBasicDescriptionQueryBuilder;
+    private static final SQLiteQueryBuilder sGroceryByCategoryQueryBuilder;
    static{
        sGroceryByBrandQueryBuilder  = new SQLiteQueryBuilder();
        //groceries INNER JOIN brands ON groceries.brand_id = brands._id
@@ -60,15 +61,16 @@ String TAG ="Content Provider";
    }
 
    static{
-       sGroceryByBasicDescriptionQueryBuilder    = new SQLiteQueryBuilder();
+       sGroceryByCategoryQueryBuilder = new SQLiteQueryBuilder();
        //This is an inner join which looks like
        //groceries INNER JOIN basic_descriptions ON groceries.basic_description_id = basic_description_id
-       sGroceryByBasicDescriptionQueryBuilder.setTables(
+       sGroceryByCategoryQueryBuilder.setTables(
                GroceryContract.GroceryEntry.TABLE_NAME + " INNER JOIN " +
-               " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
-               "." + GroceryContract.GroceryEntry.COLUMN_CATEGORY_LOC_KEY +
-               " = " + GroceryContract.CategoryEntry.TABLE_NAME +
-               "." + GroceryContract.CategoryEntry._ID
+                      GroceryContract.CategoryEntry.TABLE_NAME +
+                       " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
+                       "." + GroceryContract.GroceryEntry.COLUMN_CATEGORY_LOC_KEY +
+                       " = " + GroceryContract.CategoryEntry.TABLE_NAME +
+                       "." + GroceryContract.CategoryEntry._ID
        );
 
    }
@@ -108,21 +110,36 @@ String TAG ="Content Provider";
                     "." + GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME + " = ? ";
 
     //Wherebasic_descriptions.product_type = ? AND Brands.brand_name = ?
-    private static final String sBasicDescriptionAndBrandSelection =
-            GroceryContract.CategoryEntry.TABLE_NAME +
-                    "." + GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME + " = ? AND " +
-                    GroceryContract.BrandEntry.TABLE_NAME +
-                    "." + GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME + " = ? ";
+    private static final String sGroceryUnionCategoryUnionBrandSelection =
+            GroceryContract.GroceryEntry.TABLE_NAME + "." +
+                    GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME +
+                    " like '%" + "%s" + "%' " +
+                    "UNION ALL" +
+                    " SELECT " + "'" + GroceryContract.BrandEntry.TABLE_NAME + "'" + " AS table_name, " +
+                    GroceryContract.BrandEntry.TABLE_NAME + "." +
+                    GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
+                    ", _id FROM " + GroceryContract.BrandEntry.TABLE_NAME +
+                    " WHERE " + GroceryContract.BrandEntry.TABLE_NAME + "." +
+                    GroceryContract.BrandEntry.COLUMN_PRODUCT_BRAND_NAME +
+                    " like '" +  "%s" + "%' " +
+                    "UNION ALL" +
+                    " SELECT " + "'" + GroceryContract.CategoryEntry.TABLE_NAME + "'" + " AS table_name, " +
+                    GroceryContract.CategoryEntry.TABLE_NAME + "." +
+                    GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
+                    ", _id FROM " + GroceryContract.CategoryEntry.TABLE_NAME +
+                    " Where " + GroceryContract.CategoryEntry.TABLE_NAME + "." +
+                    GroceryContract.CategoryEntry.COLUMN_CATEGORY_NAME +
+                    " like '%" + "%s" + "%' ";
+
+
 
     //When the Uri is passed through the Uri matcher this function will be called
     //During the query and return this cursor
     private Cursor getGrociesByBrandName(Uri uri, String[] projection, String sortOrder) {
         String BrandName = GroceryContract.GroceryEntry.getBrandNameFromUri(uri);
-
         String[] selectionArgs ={BrandName} ;
         String selection = sBrandSelection;
-
-        return sGroceryByBrandorCategoryQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return  sGroceryByBrandQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
@@ -133,12 +150,11 @@ String TAG ="Content Provider";
     }
 
     private Cursor getGrociesByCategory(Uri uri, String[] projection, String sortOrder) {
-        String BasicDescription = GroceryContract.GroceryEntry.getBasicDescFromUri(uri);
+        String category = GroceryContract.GroceryEntry.getCategoryFromUri(uri);
+        String[] selectionArgs ={category};
 
-        String[] selectionArgs ={BasicDescription} ;
-        String selection = sCategoriesSelection;
-
-        return sGroceryByBrandorCategoryQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        String selection =  sCategoriesSelection ;
+        return sGroceryByCategoryQueryBuilder.query(mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
@@ -147,6 +163,24 @@ String TAG ="Content Provider";
                 sortOrder
         );
     }
+
+    private Cursor getGrociesBySearch(Uri uri, String[] projection, String sortOrder) {
+
+        String  theSearch = GroceryContract.GroceryEntry.getSearchStringFromUri(uri);
+        String[] selectionArgs = null;
+        String selection = String.format(sGroceryUnionCategoryUnionBrandSelection, theSearch);
+        return  sGroceryByBrandorCategoryQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
+
     @Override
     public boolean onCreate() {
         //  Implement this to initialize your content provider on startup.
@@ -301,6 +335,15 @@ String TAG ="Content Provider";
                 break;
             }
 
+            // "groceries/categories/brands/*"
+            case GROCERIES_WITH_CATEGORIES_AND_BRANDS:
+            {
+               Log.i(TAG,"We matched the uri but failed");
+                retCursor = getGrociesBySearch(uri, projection, sortOrder);
+                break;
+            }
+
+
             // "groceries/"
             case GROCERIES :
             {    // Return the entire groceries Table
@@ -325,7 +368,7 @@ String TAG ="Content Provider";
                         selection,            // Selection criteria
                         selectionArgs,         // Selection criteria Args
                         null,                 //  groupBy
-                        null,                  //     having
+                        null,                  //   having
                         sortOrder               // orderBy
 
                 );
@@ -424,15 +467,13 @@ String TAG ="Content Provider";
         matcher.addURI(authority, GroceryContract.PATH_BRANDS , BRANDS);
         matcher.addURI(authority, GroceryContract.PATH_CATEGORIES, CATEGORIES);
         matcher.addURI(authority, GroceryContract.PATH_INVENTORY,INVENTORY);
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/" +GroceryContract.PATH_CATEGORIES + "/*", GROCERIES_WITH_CATEGORIES);
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+ GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
-        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +
-                GroceryContract.PATH_CATEGORIES +
-                GroceryContract.PATH_BRANDS +
-                "/*/*", GROCERIES_WITH_CATEGORIES_AND_BRANDS);
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+GroceryContract.PATH_CATEGORIES + "/*", GROCERIES_WITH_CATEGORIES);
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
+       matcher.addURI(authority,
+              GroceryContract.PATH_GROCERIES +"/"+GroceryContract.PATH_CATEGORIES +"/"+GroceryContract.PATH_BRANDS +"/*",
+              GROCERIES_WITH_CATEGORIES_AND_BRANDS);
 
-//TODO how to add a grocery item add brand get back the id add basic_Depscrtion get back and id then add the grocery with the id's as location for key values
-        return matcher;
+       return matcher;
     }
 
 

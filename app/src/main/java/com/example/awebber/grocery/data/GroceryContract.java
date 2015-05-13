@@ -36,10 +36,10 @@ public  class GroceryContract  {
     // Possible paths (appended to base content URI for possible URI's)
     // For instance, content://com.example.awebber.grocery/groceries/ is a valid path for
     // looking at groceries data.
-    public static final String PATH_GROCERIES = GroceryEntry.TABLE_NAME;// "groceries";
-    public static final String PATH_BRANDS = BrandEntry.TABLE_NAME;// "brands";
+    public static final String PATH_GROCERIES  = GroceryEntry.TABLE_NAME;// "groceries";
+    public static final String PATH_BRANDS     = BrandEntry.TABLE_NAME;// "brands";
     public static final String PATH_CATEGORIES = CategoryEntry.TABLE_NAME;//"categories";
-    public static final String PATH_INVENTORY =InventoryEntry.TABLE_NAME;//
+    public static final String PATH_INVENTORY  = InventoryEntry.TABLE_NAME;//
     // Inner class that defines the table contents of the groceries table
     public static final class GroceryEntry implements BaseColumns {
 
@@ -82,30 +82,34 @@ public  class GroceryContract  {
                    }
 
         //For queries use buildGroceriesBasicDescWBrand
-        public static Uri buildGroceriesBasicDesc(String productDescription) {
+        public static Uri buildGroceriesCategory(String productCategory) {
             return CONTENT_URI.buildUpon().
                     appendPath(PATH_CATEGORIES).
-                    appendPath(productDescription).
+                    appendPath(productCategory).
                     build();
         }
 
-        //
-        public static Uri buildGroceriesBasicDescWBrand(String productDescription,String brandName) {
-         //TODO Delete this test print out
-          Log.e(TAG, CONTENT_URI.buildUpon().appendPath(productDescription).appendPath(brandName).appendQueryParameter("This", "That").build().toString());
+        //User for Search S
+        public static Uri buildCategoryWBrand(String SearchString ) {
 
             return CONTENT_URI.
                     buildUpon().
-                    appendPath(productDescription).
-                    appendPath(brandName).
+                    appendPath(PATH_CATEGORIES).
+                    appendPath(PATH_BRANDS).
+                    appendPath(SearchString).
                     build();
         }
+        public static String getSearchStringFromUri(Uri uri) {
 
+            return uri.getPathSegments().get(3);
+        }
         public static String getBrandNameFromUri(Uri uri) {
+
             return uri.getPathSegments().get(2);
       }
 
-        public static String getBasicDescFromUri(Uri uri) {
+        public static String getCategoryFromUri(Uri uri) {
+
             return  uri.getPathSegments().get(2);
         }
     }
