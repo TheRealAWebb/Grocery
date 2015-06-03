@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".GrocerySearchActivity"
+            android:name=".activites.SearchActivity"
             android:label="@string/title_activity_main" >
         </activity>
 
@@ -20,21 +20,20 @@
             android:name=".data.GroceryContentProvider"
             android:authorities="com.example.awebber.grocery"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="false" >
         </provider>
 
         <activity
-            android:name=".GroceryDetailActivity"
+            android:name=".activites.DetailActivity"
             android:label="@string/title_activity_grocery_detail"
-            android:parentActivityName=".GrocerySearchActivity" >
+            android:parentActivityName=".activites.SearchActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".GrocerySearchActivity" />
+                android:value=".activites.SearchActivity" />
         </activity>
         <activity
-            android:name=".GroceryMainActivity"
-            android:label="@string/title_activity_grocery_main"
-            android:theme="@style/GroceryMainTheme" >
+            android:name=".activites.MainActivity"
+            android:label="@string/title_activity_grocery_main" >
             <intent-filter android:label="@string/app_name" >
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,24 +41,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GroceryInventoryActivity"
+            android:name=".activites.InventoryActivity"
             android:label="@string/title_activity_grocery_inventory" >
         </activity>
         <activity
-            android:name=".GroceryCategoryActivity"
+            android:name=".activites.CategoryActivity"
             android:label="@string/title_activity_grocery_category" >
         </activity>
         <activity
-            android:name=".GroceryAddCategoryActivity"
+            android:name=".activites.CategoryAddActivity"
             android:label="@string/title_activity_grocery_add_category"
-            android:parentActivityName=".GroceryCategoryActivity" >
+            android:parentActivityName=".activites.CategoryActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.awebber.grocery.GroceryCategoryActivity" />
+                android:value=".activites.CategoryActivity" />
         </activity>
         <activity
-            android:name=".GroceryCateogoryTabs"
+            android:name=".activites.CategoryTabsActivity"
             android:label="@string/title_activity_grocery_cateogory_tabs" >
+        </activity>
+        <activity
+            android:name=".activites.EditInventoryItemActivity"
+            android:label="@string/title_activity_edit_inventory_item"
+            android:parentActivityName=".activites.InventoryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activites.InventoryActivity" />
         </activity>
     </application>
 

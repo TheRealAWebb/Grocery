@@ -1,0 +1,7 @@
+vegetables
+fruits
+dairyeggs
+meats
+seafood
+cerealbreakfastfoods
+frozenfoodicecream

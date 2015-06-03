@@ -3,7 +3,7 @@ package com.example.awebber.grocery.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.example.awebber.grocery.GroceryMainFragment.SamplePagerItem;
+import com.example.awebber.grocery.fragments.MainFragment.SamplePagerItem;
 import java.util.List;
 
 

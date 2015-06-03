@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.awebber.grocery.activites.InventoryActivity$PlaceholderFragment"
+    android:background="@color/Grey50">
+    <ListView
+        android:id ="@+id/list_view_inventory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/Grey50"
+        android:divider="@null"
+        android:dividerHeight="0dp">
+    </ListView>
+    <!-- view to be shown/hidden on empty list above -->
+    <TextView
+        android:id="@+id/emptyListElem"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:gravity="center"
+        android:text="@string/empty_List_Elem_text" />
+</LinearLayout>

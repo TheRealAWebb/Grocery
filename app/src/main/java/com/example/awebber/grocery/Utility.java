@@ -1,7 +1,21 @@
+/**
+ * Created by awebber on 4/27/15.
+ * Description:
+ *
+ * Purpose:
+ *
+ *
+ *
+ * Usage:
+ *
+ *
+ * */
 package com.example.awebber.grocery;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.util.Log;
+import android.widget.ImageButton;
 
 import com.example.awebber.grocery.data.GroceryContract;
 
@@ -15,22 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
-/**
- * Created by awebber on 4/27/15.
- * Description:
- *
- * Purpose:
- *
- *
- *
- * Usage:
- *
- *
- * */
+
 public class Utility {
 
     public static final String TAG ="Utility";
@@ -58,7 +63,7 @@ public class Utility {
 }
 
     public  List<String>   LoadTextFile(Context context,int theTextFile){
-       List<String> theList = new ArrayList<String>();
+        List<String> theList = new ArrayList<String>();
         AssetManager assetManager = context.getAssets();
         InputStream inputStream = context.getResources().openRawResource(theTextFile);
 
@@ -86,25 +91,37 @@ public class Utility {
 
       //Desgin FOR "http://www.upcdatabase.org/
 
-    public static void xmlParse (XmlPullParser xpp) throws XmlPullParserException, IOException
+    public static HashMap<String,String> xmlParse (XmlPullParser xpp) throws XmlPullParserException, IOException
     {
         XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
         factory.setNamespaceAware(true);
-
+        HashMap<String,String> xmlParsed = new HashMap<String,String>();
+    String tag ="";
+    String text ;
         int eventType = xpp.getEventType();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             if(eventType == XmlPullParser.START_DOCUMENT) {
                 System.out.println("Start document");
             } else if(eventType == XmlPullParser.START_TAG) {
-                System.out.println("Start tag "+xpp.getName());
+               tag = xpp.getName();
+                System.out.println("Start tag "+tag);
             } else if(eventType == XmlPullParser.END_TAG) {
                 System.out.println("End tag "+xpp.getName());
             } else if(eventType == XmlPullParser.TEXT) {
-                System.out.println("Text "+xpp.getText());
+                text = xpp.getText();
+                if(!tag.equals("") || !text.equals("")||!text.equals("\n") ) {
+                    Log.i(TAG, "TAG = :" + tag + ": Text = ->" + text+ "<-");
+                    xmlParsed.put(tag, text);
+                }
             }
             eventType = xpp.next();
         }
         System.out.println("End document");
+    return  xmlParsed;
+    }
+    public void addToInventory( HashMap<String,String> result) {
+
+
     }
 
 

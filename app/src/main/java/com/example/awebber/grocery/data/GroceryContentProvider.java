@@ -34,6 +34,7 @@ String TAG ="Content Provider";
     static final int GROCERIES = 100;
     static final int GROCERIES_WITH_BRANDS = 102;
     static final int GROCERIES_WITH_CATEGORIES =103;
+    static final int GROCERIES_WITH_INVENTORY =104;
     static final int GROCERIES_WITH_CATEGORIES_AND_BRANDS =105;
 
     static final int BRANDS = 200;
@@ -48,6 +49,7 @@ String TAG ="Content Provider";
     private static final SQLiteQueryBuilder sGroceryByBrandorCategoryQueryBuilder;
     private static final SQLiteQueryBuilder sGroceryByBrandQueryBuilder;
     private static final SQLiteQueryBuilder sGroceryByCategoryQueryBuilder;
+    private static final SQLiteQueryBuilder sGroceryByInventoryQueryBuilder;
     private static final SQLiteQueryBuilder  sGroceryQueryBuilder;
     static{
        sGroceryByBrandQueryBuilder  = new SQLiteQueryBuilder();
@@ -75,6 +77,24 @@ String TAG ="Content Provider";
        );
 
    }
+
+    static{
+        sGroceryByInventoryQueryBuilder = new SQLiteQueryBuilder();
+        //This is an inner join which looks like
+        //groceries INNER JOIN basic_descriptions ON groceries.basic_description_id = basic_description_id
+        sGroceryByInventoryQueryBuilder.setTables(
+                GroceryContract.GroceryEntry.TABLE_NAME + " INNER JOIN " +
+                        GroceryContract.InventoryEntry.TABLE_NAME +
+                        " ON " + GroceryContract.GroceryEntry.TABLE_NAME +
+                        "." + GroceryContract.GroceryEntry._ID +
+                        " = " + GroceryContract.InventoryEntry.TABLE_NAME +
+                        "." + GroceryContract.InventoryEntry.COLUMN_GROCERY_LOC_KEY
+        );
+
+    }
+
+
+
     static{
         sGroceryQueryBuilder = new SQLiteQueryBuilder();
         //This is an inner join which looks like
@@ -164,8 +184,22 @@ String TAG ="Content Provider";
         );
     }
 
+    private Cursor getGrociesByInventory(Uri uri, String[] projection, String  selection,
+                                         String[] selectionArgs ,String sortOrder) {
+
+        return  sGroceryByInventoryQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
     private Cursor getGrociesByCategory(Uri uri, String[] projection, String sortOrder) {
-       Log.i(TAG, " Category is "+GroceryContract.GroceryEntry.getCategoryFromUri(uri));
+        Log.i(TAG, " Category is "+GroceryContract.GroceryEntry.getCategoryFromUri(uri));
         String category = GroceryContract.GroceryEntry.getCategoryFromUri(uri);
         String[] selectionArgs ={category};
 
@@ -179,6 +213,8 @@ String TAG ="Content Provider";
                 sortOrder
         );
     }
+
+
 
     private Cursor getGrociesBySearch(Uri uri, String[] projection, String sortOrder) {
 
@@ -274,7 +310,7 @@ String TAG ="Content Provider";
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
+
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -361,6 +397,17 @@ String TAG ="Content Provider";
                 break;
             }
 
+            case GROCERIES_WITH_INVENTORY:
+            {
+                retCursor = getGrociesByInventory(
+                        uri,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        sortOrder);
+                break;
+
+            }
             // "groceries/categories/brands/*"
             case GROCERIES_WITH_CATEGORIES_AND_BRANDS:
             {
@@ -506,11 +553,11 @@ String TAG ="Content Provider";
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+GroceryContract.PATH_CATEGORIES + "/*", GROCERIES_WITH_CATEGORIES);
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+GroceryContract.PATH_CATEGORIES +"/*/*", GROCERIES_WITH_CATEGORIES_AND_BRANDS);
         matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+GroceryContract.PATH_BRANDS + "/*", GROCERIES_WITH_BRANDS);
-
+        matcher.addURI(authority, GroceryContract.PATH_GROCERIES +"/"+ GroceryContract.PATH_INVENTORY,GROCERIES_WITH_INVENTORY);
         matcher.addURI(authority, GroceryContract.PATH_BRANDS , BRANDS);
         matcher.addURI(authority, GroceryContract.PATH_CATEGORIES, CATEGORIES);
         matcher.addURI(authority, GroceryContract.PATH_CATEGORIES + "/*", CATEGORIES_SEARCH);
-        matcher.addURI(authority, GroceryContract.PATH_INVENTORY,INVENTORY);
+        matcher.addURI(authority, GroceryContract.PATH_INVENTORY+ "/#",INVENTORY);
 
 
 

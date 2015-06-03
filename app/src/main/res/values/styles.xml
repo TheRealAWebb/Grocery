@@ -1,14 +1,41 @@
 <resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/menu_white_text</item>
+    </style>
+    <!-- Main activity theme. -->
+    <style name="GroceryMainTheme" parent="AppTheme">
+        <item name="actionBarStyle">@style/ActionBar.Solid.Grocery.NoTitle</item>
+    </style>
+    <!-- main activity action bar styles -->
+    <style name="ActionBar.Solid.Grocery.NoTitle"
+        parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+
+
+    </style>
+    <!-- colorPrimary is used, for instance, for the default ActionBar
+           (but not Toolbar) background.
+            We specify the same color for the toolbar background in
+            toolbar.xml.. -->
+
+    <!-- colorPrimaryDark is used for the status bar (with the
+           battery, clock, etc). -->
     <style
-        name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        name="Theme.MyActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+
+
     </style>
 
-    <!-- main activity action bar styles -->
-        <style name="ActionBar.Solid.Grocery.NoTitle"
-            parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-            <item name="displayOptions">useLogo|showHome</item>
-        </style>
+
+
+
+
+    <style name="InventoryTheme">
+
+    </style>
 
 
 

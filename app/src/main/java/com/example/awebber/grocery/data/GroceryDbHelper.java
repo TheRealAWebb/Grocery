@@ -14,6 +14,8 @@
 package com.example.awebber.grocery.data;
 import android.content.ContentValues;
 import android.content.Context;
+
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -28,18 +30,26 @@ import com.example.awebber.grocery.data.GroceryContract.InventoryEntry;
 import java.util.List;
 
 public class GroceryDbHelper extends SQLiteOpenHelper{
-    public static final String TAG ="GroceryDbHelper";
+    static Context mContext;
+    public static final String TAG = GroceryDbHelper.class.getSimpleName();
     // If you change the database schema, you must increment the database version.
+
     //Incermented to 2 because of row name change
     private static final int DATABASE_VERSION =1;
-    private static Context mContext;
+
     static final String DATABASE_NAME = "grocery.db";
 
     public GroceryDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mContext =context;
+       mContext = context;
 
     }
+
+    private static Context getContext(){
+
+        return mContext;
+    }
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -68,7 +78,7 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
                 GroceryEntry.COLUMN_CATEGORY_LOC_KEY + " INTEGER, " +
                 GroceryEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " +
                 GroceryEntry.COLUMN_BRAND_LOC_KEY  + " INTEGER, " +
-                GroceryEntry.COLUMN_QUANTITY        + " INTEGER, " +
+              //  GroceryEntry.COLUMN_QUANTITY        + " INTEGER, " +
 
                 // Set up the basic_description column as a foreign key to basic_description table.
                 " FOREIGN KEY " +"(" + GroceryEntry.COLUMN_CATEGORY_LOC_KEY + ")" +
@@ -108,32 +118,69 @@ public class GroceryDbHelper extends SQLiteOpenHelper{
         Log.i(TAG,SQL_CREATE_INVENTORY_TABLE);
 
         Utility utility = new Utility();
-        List<String> brands =   utility.LoadTextFile( mContext, R.raw.brandslist);
-        List<String> groceries =   utility.LoadTextFile( mContext, R.raw.vegetables);
-        List<String> categories =   utility.LoadTextFile( mContext, R.raw.categories);
+        List<String> brands =               utility.LoadTextFile(  getContext(), R.raw.brandslist);
+        List<String> categories =           utility.LoadTextFile( getContext(), R.raw.categories);
+        List<String> categoriesFileNames =    utility.LoadTextFile(getContext(), R.raw.categoryfilenames);
+        List<String> CategoryDatabaseNames =    utility.LoadTextFile(getContext(), R.raw.grocerydata);
+        List<String>  groceries;
         for (String brand : brands)
         {
             ContentValues brandValues = new ContentValues();
             brandValues.put(BrandEntry.COLUMN_PRODUCT_BRAND_NAME, brand);
             sqLiteDatabase.insert(BrandEntry.TABLE_NAME,null,brandValues);
         }
-
-
         for (String category : categories)
         {
             ContentValues categoryValues = new ContentValues();
             categoryValues.put(CategoryEntry.COLUMN_CATEGORY_NAME, category);
             sqLiteDatabase.insert(CategoryEntry.TABLE_NAME,null, categoryValues);
         }
-        for (String grocery :  groceries )
-        {
-            ContentValues  groceryValues = new ContentValues();
-            groceryValues.put(GroceryEntry.COLUMN_PRODUCT_NAME, grocery);
-            Log.i(TAG, " INsert " + grocery);
-            groceryValues.put(GroceryEntry.COLUMN_CATEGORY_LOC_KEY, 1);
-            Log.i(TAG, " INsert  " + "0");
-            sqLiteDatabase.insert(GroceryEntry.TABLE_NAME,null, groceryValues);
+
+        int categoryId ;
+        String Filename;
+        String category;
+        String productName;
+        for(int postition = 0;postition<  categoriesFileNames.size();postition++) {
+            Filename = categoriesFileNames.get(postition);
+            groceries =   utility.LoadTextFile(
+                    getContext(),
+                    getContext().getResources().
+                    getIdentifier(Filename, "raw", "com.example.awebber.grocery"));
+
+                Log.i(TAG, " This is the file name " + Filename);
+
+                category = CategoryDatabaseNames.get(postition);
+                Log.i(TAG, " This is the file Category " + category);
+                Cursor x = sqLiteDatabase.query(
+                        CategoryEntry.TABLE_NAME,
+                        new String[]{CategoryEntry._ID},
+                        CategoryEntry.COLUMN_CATEGORY_NAME + " =?",
+                        new String[]{category},
+                        null,
+                        null,
+                        null);
+
+
+                int CategoryEntryID =0;
+                x.moveToFirst();
+                categoryId = x.getInt(CategoryEntryID);
+                x.close();
+
+
+                for (int z=0; z< groceries.size();z++) {
+                    productName = groceries.get(z);
+                    ContentValues groceryValues = new ContentValues();
+                    int UnknownBrandLocKey =1;
+                    groceryValues.put(GroceryEntry.COLUMN_BRAND_LOC_KEY,UnknownBrandLocKey);
+                    groceryValues.put(GroceryEntry.COLUMN_PRODUCT_NAME, productName);
+                    groceryValues.put(GroceryEntry.COLUMN_CATEGORY_LOC_KEY, categoryId);
+                    sqLiteDatabase.insert(GroceryEntry.TABLE_NAME, null, groceryValues);
+                }
+
+
         }
+
+
 
 
     }

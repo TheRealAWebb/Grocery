@@ -68,6 +68,9 @@ public  class GroceryContract  {
 
         //Build a uri with an id number @ the end used for queries with id
 
+        public static String getIdFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
+        }
          //For queries use buildGroceriesBasicDescWBran
         public static Uri buildGroceriesUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -88,7 +91,11 @@ public  class GroceryContract  {
                     appendPath(productCategory).
                     build();
         }
-
+        public static Uri buildGroceriesInventory() {
+            return CONTENT_URI.buildUpon().
+                    appendPath(PATH_INVENTORY).
+                    build();
+        }
         //User for Search S
         public static Uri buildCategoryWBrand(String SearchString ) {
 

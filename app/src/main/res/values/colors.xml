@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="Green700">#388e3c</color>
+    <color name="Green100">#c8e6c9</color>
+    <color name="DeepOrange700">#e64a19</color>
+    <color name="Grey50">#fafafa</color>
+
     <color name="menu_blue_background">#33B5E5</color>
     <color name="opaque_red">#f00</color>
     <color name="menu_white_text">#ffffffff</color>
@@ -9,4 +14,6 @@
     <color name="sunshine_blue">#ff1ca8f4</color>
     <color name="sunshine_dark_blue">#0288D1</color>
     <color name="logo_blue">#3a7fd6</color>
+    <color name="category_delete">#3a7fd6</color>
+
 </resources>
