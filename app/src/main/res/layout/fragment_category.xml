@@ -6,18 +6,18 @@
     tools:context="com.example.awebber.grocery.activites.CategoryActivity$PlaceholderFragment"
     android:background="@color/Grey50"
     >
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:background="@color/Grey50"
-        android:id="@+id/list_view_grocery_category"
+        android:id="@+id/recyclerview_category"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="0dp">
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
     <!-- view to be shown/hidden on empty list above -->
     <TextView
-        android:id="@+id/emptyListElem"
+        android:id="@+id/empty_recycler_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"

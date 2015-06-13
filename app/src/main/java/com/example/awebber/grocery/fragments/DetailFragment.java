@@ -129,9 +129,6 @@ public class DetailFragment extends Fragment  implements LoaderManager.LoaderCal
                theID.moveToFirst(); //Move to first Element
                 Log.i(TAG, "This is the id of " + theValue + " " + theID.getString(0));
 
-
-               // uri = GroceryContract.GroceryEntry.CONTENT_URI;
-               // projections[0] = "";
                 selection = GroceryContract.GroceryEntry.TABLE_NAME +
                         "." + GroceryContract.GroceryEntry.COLUMN_BRAND_LOC_KEY + " = ? ";
 

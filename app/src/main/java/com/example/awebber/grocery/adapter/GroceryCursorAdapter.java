@@ -13,26 +13,16 @@
  **/
 package com.example.awebber.grocery.adapter;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.content.ContentValues;
+
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.app.LoaderManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
-
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.awebber.grocery.R;
-
-import com.example.awebber.grocery.activites.EditInventoryItemActivity;
-import com.example.awebber.grocery.data.GroceryContract;
 import com.example.awebber.grocery.fragments.InventoryFragment;
 import com.example.awebber.grocery.fragments.SearchFragment;
 

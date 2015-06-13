@@ -1,6 +1,5 @@
 package com.example.awebber.grocery.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -11,20 +10,20 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import android.widget.AdapterView;
-import android.widget.ListView;
-
-import com.example.awebber.grocery.activites.CategoryTabsActivity;
 import com.example.awebber.grocery.R;
 import com.example.awebber.grocery.activites.CategoryAddActivity;
-import com.example.awebber.grocery.adapter.GroceryCursorAdapter;
+import com.example.awebber.grocery.activites.CategoryTabsActivity;
+import com.example.awebber.grocery.adapter.CategoryRecyclerAdapter;
 import com.example.awebber.grocery.data.GroceryContract;
 
 /**
@@ -35,11 +34,13 @@ e
  */
 public class CategoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String TAG = CategoryFragment.class.getSimpleName();
+    public static final int COLUMN_CATEGORY_NAME =0;
+    public static final int COLUMN_CATEGORY_ID =1;
     public static final int ADD_CATEGORY_REQUEST = 2;
-  //  private static Context mContext ;
+    private RecyclerView mRecyclerView;
     private static final int CATEGORY_LOADER = 0;
-    //CursorAdapter mGroceryCursorAdapter;
-    GroceryCursorAdapter mGroceryCursorAdapter;
+
+    CategoryRecyclerAdapter mCategoryRecyclerAdapter;
 
     public CategoryFragment() {
         // Required empty public constructor
@@ -70,37 +71,34 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_category, container, false);
+        View empty = rootView.findViewById(R.id.empty_recycler_view);
 
-        ListView groceryListView = (ListView) rootView.findViewById(R.id.list_view_grocery_category);
-        View empty = rootView.findViewById(R.id.emptyListElem);
-        groceryListView.setEmptyView(empty);
-
-        mGroceryCursorAdapter = new GroceryCursorAdapter(getActivity(),null,0);
-        mGroceryCursorAdapter.setDisplayStyle(CategoryFragment.class.getSimpleName());
-
-        groceryListView.setAdapter(mGroceryCursorAdapter);
-
-        getLoaderManager().restartLoader(CATEGORY_LOADER, null, this);
-
-
-        groceryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        mCategoryRecyclerAdapter = new CategoryRecyclerAdapter(getActivity(),
+                new CategoryRecyclerAdapter.CategoryRecyclerAdapterOnClickHandler() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-              Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
-
-                    Intent intent = new Intent(getActivity(), CategoryTabsActivity.class);
-                    intent.putExtra("Position", position);
-                    intent.putExtra("ColumnCategory", cursor.getString(0));
-                    startActivity(intent);
-                }
+            public void onClick(int adapterPosition, String categoryName,
+                                CategoryRecyclerAdapter.CategoryAdapterViewHolder categoryAdapterViewHolder) {
+                Intent intent = new Intent(getActivity(), CategoryTabsActivity.class);
+                intent.putExtra("Position", adapterPosition);
+                intent.putExtra("ColumnCategory", categoryName);
+                startActivity(intent);
             }
-        });
+        },empty);
 
+        mCategoryRecyclerAdapter.setOnItemLongClickListener(new CategoryRecyclerAdapter.CategoryRecyclerAdapterOnLongClickHandler() {
+                                                                @Override
+                                                                public void onLongClick(int adapterPosition, String categoryName, CategoryRecyclerAdapter.CategoryAdapterViewHolder categoryAdapterViewHolder) {
+                                                                    Intent intent = new Intent(getActivity(), CategoryTabsActivity.class);
+                                                                    intent.putExtra("Position", adapterPosition);
+                                                                    intent.putExtra("ColumnCategory", categoryName);
+                                                                    startActivity(intent);
+                                                                }
+                                                            }
 
-
+        );
+        mRecyclerView= (RecyclerView) rootView.findViewById(R.id.recyclerview_category);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mCategoryRecyclerAdapter);
 
         return rootView;
     }
@@ -133,14 +131,22 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mGroceryCursorAdapter.swapCursor(cursor);
+        mCategoryRecyclerAdapter.swapCursor(cursor);
+        updateEmptyView();
     }
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mGroceryCursorAdapter.swapCursor(null);
+        mCategoryRecyclerAdapter.swapCursor(null);
+    }
+
+    private void updateEmptyView() {
+        if ( mCategoryRecyclerAdapter.getItemCount() == 0 ) {
+           TextView tv = (TextView) getView().findViewById(R.id.empty_recycler_view);
+
+        }
     }
     /**
-     * @return a new instance of {@link SearchFragment}
+     * @return a new instance of {@link CategoryFragment}
      */
     public static CategoryFragment newInstance() {
         CategoryFragment fragment = new CategoryFragment();
