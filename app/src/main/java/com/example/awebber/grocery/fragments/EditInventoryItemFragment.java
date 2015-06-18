@@ -103,7 +103,7 @@ public class EditInventoryItemFragment extends Fragment  implements LoaderManage
         View rootView = inflater.inflate(R.layout.fragment_edit_inventory_item, container, false);
         mQuantityEditText = ( EditText) rootView.findViewById(R.id.quantity);
         mNameTextView = ( TextView) rootView.findViewById(R.id.name);
-        mQuantityEditText.setText(getActivity().getIntent().getIntExtra("Quantity", 1) + "");
+        mQuantityEditText.setText(getActivity().getIntent().getStringExtra("Quantity"));
         mNameTextView.setText(getActivity().getIntent().getStringExtra("ItemName"));
 
 

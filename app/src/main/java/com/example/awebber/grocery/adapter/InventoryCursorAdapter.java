@@ -29,8 +29,6 @@ public class InventoryCursorAdapter  extends CursorAdapter {
 
     public  InventoryCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
-
-
     }
 
     public Context getContext(){

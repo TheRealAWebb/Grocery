@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.awebber.grocery.R;
 
 import com.example.awebber.grocery.fragments.CategoryFragment;
+import com.example.awebber.grocery.fragments.InventoryFragment;
 
 /**
  * Created by awebber on 6/10/15.

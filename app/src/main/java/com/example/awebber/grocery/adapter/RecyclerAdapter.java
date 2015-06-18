@@ -18,7 +18,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Adapte
 
     private Cursor mCursor;
     final private Context mContext;
-    final private RecyclerAdapterOnClickHandler mOnClickHandler;
+    static private RecyclerAdapterOnClickHandler mOnClickHandler;
     final private View mEmptyView;
     static private RecyclerAdapterOnLongClickHandler mOnLongClickHandler;
 
@@ -65,6 +65,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Adapte
         mContext = context;
         mOnClickHandler  = adapterViewHolder;
         mEmptyView = emptyView;
+    }
+    public void setOnItemClickListener(RecyclerAdapterOnClickHandler recyclerAdapterOnClickHandler){
+        mOnClickHandler = recyclerAdapterOnClickHandler;
     }
 
     @Override

@@ -9,7 +9,9 @@
     android:orientation="vertical"
     tools:context="com.example.awebber.grocery.activites.SearchActivity$GroceryFragment"
     android:background="@color/Grey50">
-
+<android.support.design.widget.TextInputLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
      <SearchView
         android:id="@+id/search_products"
          android:layout_width="match_parent"
@@ -17,7 +19,7 @@
         android:hint="@string/search_products_hint"
          android:background="@color/menu_white_text">
         </SearchView>
-
+</android.support.design.widget.TextInputLayout>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

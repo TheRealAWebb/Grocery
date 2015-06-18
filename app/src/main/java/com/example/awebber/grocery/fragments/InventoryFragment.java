@@ -17,15 +17,19 @@ package com.example.awebber.grocery.fragments;
 
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,11 +40,12 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 
-import android.widget.ListView;
-
 
 import com.example.awebber.grocery.R;
+import com.example.awebber.grocery.activites.EditInventoryItemActivity;
 import com.example.awebber.grocery.adapter.InventoryCursorAdapter;
+import com.example.awebber.grocery.adapter.InventoryRecyclerAdapter;
+import com.example.awebber.grocery.adapter.RecyclerAdapter;
 import com.example.awebber.grocery.data.GroceryContract;
 import com.example.awebber.grocery.zxingbarcode.IntentIntegrator;
 
@@ -49,11 +54,14 @@ import com.example.awebber.grocery.zxingbarcode.IntentIntegrator;
  */
 public class InventoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final String TAG = InventoryFragment.class.getSimpleName();
-    private InventoryCursorAdapter mInventoryCursorAdapter;
+    private InventoryRecyclerAdapter mInventoryRecyclerAdapter;
     private static final int INVENTORY_LOADER = 0;
+    public static final int COLUMN_PRODUCT_NAME = 0 ;
+    public static final int COLUMN_QUANTITY = 1;
+    public static final int _ID =2;
+    public static final int COLUMN_CATEGORY_LOC_KEY =3;
 
     public InventoryFragment() {
-
     }
 
     public static class inventoryDialogFragment extends DialogFragment {
@@ -101,37 +109,66 @@ public class InventoryFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_inventory, container, false);
+        FloatingActionButton scanItem = (FloatingActionButton)  rootView.findViewById(R.id.fab_scan_item);
+        FloatingActionButton addItem = (FloatingActionButton)  rootView.findViewById(R.id.fab_add_item);
+        // RecyclerAdapter mRecyclerAdapter = new RecyclerAdapter(getActivity();
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.list_view_inventory);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mInventoryCursorAdapter = new InventoryCursorAdapter(getActivity(),null,0);
 
-        ListView groceryListView = (ListView) rootView.findViewById(R.id.list_view_inventory);
         View empty = rootView.findViewById(R.id.emptyListElem);
-        groceryListView.setEmptyView(empty);
-        groceryListView.setAdapter(mInventoryCursorAdapter);
-
-        groceryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mInventoryRecyclerAdapter = new InventoryRecyclerAdapter(getActivity(),empty);
+        mRecyclerView.setAdapter(mInventoryRecyclerAdapter);
+        mInventoryRecyclerAdapter.setOnItemClickListener(new InventoryRecyclerAdapter.RecyclerAdapterOnClickHandler() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                int index = cursor.getColumnIndex(GroceryContract.InventoryEntry.COLUMN_QUANTITY);
-                Log.i(TAG, Integer.toString(cursor.getInt(index)));
-                int quantityPlusOne = cursor.getInt(index) + 1;
-                Log.i(TAG, Integer.toString(quantityPlusOne));
+            public void onClick(int adapterPosition, String quantity, String id, InventoryRecyclerAdapter.AdapterViewHolder AdapterViewHolder) {
+                int quantityPlusOne = Integer.valueOf(quantity) + 1;
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(GroceryContract.InventoryEntry.COLUMN_QUANTITY, quantityPlusOne);
 
-                getFragment().getActivity().getContentResolver().update(
-                        GroceryContract.InventoryEntry.buildInventoryUri(id),
+                getActivity().getContentResolver().update(
+                        GroceryContract.InventoryEntry.buildInventoryUri(1),
                         contentValues,
                         GroceryContract.InventoryEntry._ID + " =? ",
-                        new String[]{Long.toString(id)});
+                        new String[]{id});
 
-                getLoaderManager().restartLoader(INVENTORY_LOADER, null, InventoryFragment.this);
 
+                Uri groceriesUri = GroceryContract.GroceryEntry.buildGroceriesInventory();
+                String[] projections = {
+                        GroceryContract.GroceryEntry.TABLE_NAME + "." + GroceryContract.GroceryEntry.COLUMN_PRODUCT_NAME,
+                        GroceryContract.InventoryEntry.TABLE_NAME + "." + GroceryContract.InventoryEntry.COLUMN_QUANTITY,
+                        GroceryContract.InventoryEntry.TABLE_NAME + "." + GroceryContract.InventoryEntry._ID,
+                        GroceryContract.GroceryEntry.TABLE_NAME + "." + GroceryContract.GroceryEntry.COLUMN_CATEGORY_LOC_KEY};
+                Cursor newCusor = getActivity().getContentResolver().query(
+                        groceriesUri,
+                        projections,
+                        null,
+                        null,
+                        null
+                );
+                mInventoryRecyclerAdapter.swapCursor(newCusor);
             }
         });
+        mInventoryRecyclerAdapter.setOnItemLongClickListener(new InventoryRecyclerAdapter.RecyclerAdapterOnLongClickHandler() {
+            @Override
+            public void onLongClick(String id,String quantity,String productName,String categoryLocKey) {
+                Intent intent = new Intent(getActivity(), EditInventoryItemActivity.class);
+                intent.putExtra("ID", id);
+                intent.putExtra("Quantity", quantity);
+                intent.putExtra("ItemName",  productName);
+                intent.putExtra("GroceryCategoryLocKey", categoryLocKey);
+                getActivity().startActivity(intent);
+            }
+        });
+        scanItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(getActivity());
+                integrator.initiateScan();
+            }
+        });
+
         return rootView;
 
     }
@@ -159,11 +196,11 @@ public class InventoryFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        mInventoryCursorAdapter.swapCursor(cursor);
+        mInventoryRecyclerAdapter.swapCursor(cursor);
     }
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-        mInventoryCursorAdapter.swapCursor(null);
+        mInventoryRecyclerAdapter.swapCursor(null);
     }
 
     public static InventoryFragment newInstance() {

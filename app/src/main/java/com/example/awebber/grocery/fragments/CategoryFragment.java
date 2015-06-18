@@ -34,8 +34,8 @@ e
  */
 public class CategoryFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     public static final String TAG = CategoryFragment.class.getSimpleName();
-    public static final int COLUMN_CATEGORY_NAME =0;
-    public static final int COLUMN_CATEGORY_ID =1;
+    public static final int COLUMN_CATEGORY_NAME = 0;
+    public static final int COLUMN_CATEGORY_ID = 1;
     public static final int ADD_CATEGORY_REQUEST = 2;
     private RecyclerView mRecyclerView;
     private static final int CATEGORY_LOADER = 0;
@@ -87,7 +87,8 @@ public class CategoryFragment extends Fragment implements LoaderManager.LoaderCa
 
         mCategoryRecyclerAdapter.setOnItemLongClickListener(new CategoryRecyclerAdapter.CategoryRecyclerAdapterOnLongClickHandler() {
                                                                 @Override
-                                                                public void onLongClick(int adapterPosition, String categoryName, CategoryRecyclerAdapter.CategoryAdapterViewHolder categoryAdapterViewHolder) {
+                                                                public void onLongClick(int adapterPosition,
+                                                                                        String categoryName, CategoryRecyclerAdapter.CategoryAdapterViewHolder categoryAdapterViewHolder) {
                                                                     Intent intent = new Intent(getActivity(), CategoryTabsActivity.class);
                                                                     intent.putExtra("Position", adapterPosition);
                                                                     intent.putExtra("ColumnCategory", categoryName);
