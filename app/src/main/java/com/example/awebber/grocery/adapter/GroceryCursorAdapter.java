@@ -13,7 +13,6 @@
  **/
 package com.example.awebber.grocery.adapter;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
